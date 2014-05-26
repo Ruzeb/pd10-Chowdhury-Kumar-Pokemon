@@ -4,7 +4,8 @@ boolean movingUp;
 boolean movingDown;
 boolean walking;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
-PImage Sprite;
+PImage map;
+PImage currentMap;
 PImage gold;
 PImage right;
 PImage left;
@@ -21,14 +22,17 @@ int ypos = 0;
 boolean rightFoot = false; //these next two booleans are to ensure correct animation for walking up and down
 boolean leftFoot = true;
 
-//IMPORTANT! EACH PIXEL IS 16*16
+//IMPORTANT! EACH PIXEL IS 32*32
 //we need to come up with better pixel numbers for the character models
 //maybe we can use tiled for this?
 
 void setup(){
-  size(814*2,582*2);
-  Sprite = loadImage("FuschiaTown2.png").get(4,2,1280,1152);     //this is 1628,1084
-  image(Sprite,0,0);
+  size(320,288);            //this resolution should be 320 x 288 but is bigger for now because of testing
+  map = loadImage("FuschiaTown2.png").get(4,2,1280,1152);    //this is 1628,1084
+  currentMap = map.get(320,320,320,288);
+  xpos = 320;
+  ypos = 320;
+  image(currentMap,0,0);
   PImage hero = loadImage("Gold2.png"); 
   right = hero.get(0,8,32,32);
   walkingright = hero.get(28,8,32,32);
@@ -40,19 +44,20 @@ void setup(){
   up = hero.get(212,8,32,32);
   walkingupLeft = hero.get(244,8,32,32);
   walkingupRight = hero.get(274,8,32,32);
-  gold = left;
+  gold = up;
   
-  image(gold,0,0);
+  image(gold,128,128);
   println((int)0.6);
 }
 
-//Gold is moving for now when keys are pressed
-//going to have to control the speed of Gold's movements over here
+//the map now moves as it should instead of gold!!!
 void draw(){
   imageMode(CORNER);
-  image(Sprite,0,0);
-  imageMode(CORNERS);
-  image(gold,xpos,ypos,xpos + 32, ypos + 32);
+  currentMap = map.get(xpos,ypos,320,288);
+  image(currentMap,0,0);
+  imageMode(CORNER);
+  //image(gold,xpos,ypos,xpos + 32, ypos + 32);
+  image(gold,128,128);
   cleanUpGold();
   
   //this is for walking to the right animation
@@ -121,6 +126,7 @@ void draw(){
 }
 
 //this is used to move the character
+
 void keyPressed(){
   if(key == CODED){
     if(keyCode == DOWN && !(walking)){
@@ -146,22 +152,8 @@ void keyPressed(){
   }
 }
 
-void moveRight(){
- moveRight(millis(), 0); 
-}
-void moveRight(int t, int count){
- if(count == 32){
- }else{
-  if(millis() - t >= 200){
-   println("THE PROBLEM IS HERE");
-   xpos++;
-   moveRight(millis(),count + 1);
-  }else{
-    println("NOOOO!");
-    moveRight(t,count);
-  }
-} 
-}
+//dont need this for now I think
+/*
 void keyReleased(){
   if(gold == walkingleft){
     gold = left;
@@ -176,21 +168,21 @@ void keyReleased(){
     gold = up;
   }
 }
-
+*/
 
 //using this to try and get rid of the white surrounding the character models
 //need to use this to also fix up the black dots surrounding the models
 void cleanUpGold(){
   loadPixels();
-  Sprite.loadPixels();
+  currentMap.loadPixels();
   gold.loadPixels();
   color white = gold.pixels[0];
   for(int x = 0; x < 32; x ++){ 
     for(int y = 0; y < 32; y ++){
       color g = gold.pixels[x + y * 32];
       if(g == white){
-        color g2 = Sprite.pixels[(x + xpos) + ((y + ypos) * 1280)];
-        pixels[(x + xpos) + ((y + ypos) * 1628)] = g2;
+        color g2 = currentMap.pixels[(x + 128) + ((y + 128) * 320)];
+        pixels[(x + 128) + ((y + 128) * 320)] = g2;
       }
     }
   }
