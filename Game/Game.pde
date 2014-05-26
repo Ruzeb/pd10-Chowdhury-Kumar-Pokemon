@@ -27,9 +27,13 @@ boolean leftFoot = true;
 //maybe we can use tiled for this?
 
 void setup(){
-  size(320,288);            //this resolution should be 320 x 288 but is bigger for now because of testing
-  map = loadImage("FuschiaTown2.png").get(4,2,1280,1152);    //this is 1628,1084
-  currentMap = map.get(320,320,320,288);
+  size(320,288);        
+  //size(1280,1152);
+  map = loadImage("FuschiaTown2.png");
+  map = map.get(4,2,1280,1152);
+  //map = loadImage("PalletTown2.png");    //20x18
+  //map = map.get(12,10,640,576);
+  currentMap = map.get(320,320,width,width);
   xpos = 320;
   ypos = 320;
   image(currentMap,0,0);
@@ -47,14 +51,15 @@ void setup(){
   gold = up;
   
   image(gold,128,128);
-  println((int)0.6);
 }
 
 //the map now moves as it should instead of gold!!!
 void draw(){
+  loadPixels();
   imageMode(CORNER);
-  currentMap = map.get(xpos,ypos,320,288);
+  currentMap = map.get(xpos,ypos,width,height);
   image(currentMap,0,0);
+  //image(map,0,0);
   imageMode(CORNER);
   //image(gold,xpos,ypos,xpos + 32, ypos + 32);
   image(gold,128,128);
@@ -64,7 +69,7 @@ void draw(){
   if(movingRight){
     xpos++;
     cleanUpGold();
-    if(xpos % 8 >= 4){   //makes him walk smoothly
+    if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingright;
     }else{
       gold = right;
@@ -79,7 +84,7 @@ void draw(){
   if(movingLeft){
     xpos--;
     cleanUpGold();
-    if(xpos % 8 >= 4){   //makes him walk smoothly
+    if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingleft;
     }else{
       gold = left;
@@ -94,7 +99,7 @@ void draw(){
   if(movingUp){
    ypos--;
    cleanUpGold();
-   if(ypos % 8 >= 4){
+   if(abs(ypos) % 8 >= 4){
      gold = walkingupRight;
    }else{
      gold = walkingupLeft;
@@ -110,7 +115,7 @@ void draw(){
   if(movingDown){
    ypos++;
    cleanUpGold();
-   if(ypos % 8 >= 4){
+   if(abs(ypos) % 8 >= 4){
      gold = walkingdownRight;
    }else{
      gold = walkingdownLeft;
@@ -122,6 +127,40 @@ void draw(){
    }
   }
   
+  //these bits of code is to make parts of map outside the town BLACK
+  
+  if(xpos < 0){
+    for(int x = 0; x < abs(xpos); x ++){
+      for(int y = 0; y < height; y++){
+        pixels[x + y * width] = color(0);
+      }
+    }
+  }
+  
+  if(xpos + width > map.width){
+    for(int x = width - ((xpos + width) - map.width); x < width; x ++){
+      for(int y = 0; y < height; y++){
+        pixels[x + y * width] = color(0);
+      }
+    }
+  }
+  
+  if(ypos < 0){
+    for(int x = 0; x < width; x ++){
+      for(int y = 0; y < abs(ypos); y++){
+        pixels[x + y * width] = color(0);
+      }
+    }
+  }
+  if(ypos + height > map.height){
+    for(int x = 0; x < width; x ++){
+      for(int y = height - ((ypos + height) - map.height); y < height; y++){
+        pixels[x + y * width] = color(0);
+      }
+    }
+  }
+  
+  updatePixels();
   cleanUpGold();
 }
 
@@ -130,24 +169,40 @@ void draw(){
 void keyPressed(){
   if(key == CODED){
     if(keyCode == DOWN && !(walking)){
-      movingDown = true;
-      walking = true;
-      currentStep = ypos;
+      if(gold == down || gold == walkingdownRight || gold == walkingdownLeft){
+        movingDown = true;
+        walking = true;
+        currentStep = ypos;
+      }else{
+        gold = down;
+      }
     }
     if(keyCode == UP && !(walking)){
-      movingUp = true;
-      walking = true;
-      currentStep = ypos;
+      if(gold == up || gold == walkingupRight || gold == walkingupLeft){
+        movingUp = true;
+        walking = true;
+        currentStep = ypos;
+      }else{
+        gold = up;
+      }      
     }
     if(keyCode == RIGHT && !(walking)){
-      movingRight = true;
-      walking = true;
-      currentStep = xpos;
+      if(gold == right || gold == walkingright){
+        movingRight = true;
+        walking = true;
+        currentStep = xpos;
+      }else{
+        gold = right;
+      }      
     }
     if(keyCode == LEFT && !(walking)){
-      movingLeft = true;
-      walking = true;
-      currentStep = xpos;
+      if(gold == left || gold == walkingleft){
+        movingLeft = true;
+        walking = true;
+        currentStep = xpos;
+      }else{
+        gold = left;
+      }
     }     
   }
 }
@@ -181,11 +236,10 @@ void cleanUpGold(){
     for(int y = 0; y < 32; y ++){
       color g = gold.pixels[x + y * 32];
       if(g == white){
-        color g2 = currentMap.pixels[(x + 128) + ((y + 128) * 320)];
-        pixels[(x + 128) + ((y + 128) * 320)] = g2;
+        color g2 = currentMap.pixels[(x + 128) + ((y + 128) * width)];
+        pixels[(x + 128) + ((y + 128) * width)] = g2;
       }
     }
   }
   updatePixels();
 }
-
