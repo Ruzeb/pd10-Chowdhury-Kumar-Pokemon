@@ -29,13 +29,14 @@ void setup(){
   size(320,288);        
   //size(1280,1152);
   maps = new MapLoader();
-  map = maps.getFuschia().getMap();
-  map = maps.getPallet().getMap();
+  //map = maps.getFuschia().getMap();
+  //map = maps.getPallet().getMap();
+  map = maps.getNewBark().getMap();
   currentMap = map.get(320,320,width,width);
   xpos = 320;
   ypos = 320;
   image(currentMap,0,0);
-  PImage hero = loadImage("Gold2.png"); 
+  PImage hero = loadImage("Gold.png"); 
   right = hero.get(0,8,32,32);
   walkingright = hero.get(28,8,32,32);
   left = hero.get(56,8,32,32);
@@ -223,13 +224,25 @@ void keyReleased(){
 }
 */
 
-//using this to try and get rid of the white surrounding the character models
-//need to use this to also fix up the black dots surrounding the models
+//this method cleans up the character models
+//by removing the white space around them
+//and also the dots from neighboring sprites in the "Gold.png"
 void cleanUpGold(){
   loadPixels();
   currentMap.loadPixels();
   gold.loadPixels();
   color white = gold.pixels[0];
+  for(int y = 0; y < 32; y ++){
+    color g = gold.pixels[31 + y * 32];
+    color g2 = gold.pixels[30 + y * 32];
+    if(!(g == white)){
+      gold.pixels[31 + y * 32] = white;
+    }
+    if(!(g2 == white)){
+      gold.pixels[30 + y * 32] = white;
+    }
+  }
+  gold.updatePixels();
   for(int x = 0; x < 32; x ++){ 
     for(int y = 0; y < 32; y ++){
       color g = gold.pixels[x + y * 32];
