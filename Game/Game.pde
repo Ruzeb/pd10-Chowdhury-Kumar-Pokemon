@@ -19,8 +19,7 @@ PImage walkingupLeft;
 PImage walkingupRight;
 int xpos = 0;
 int ypos = 0;
-boolean rightFoot = false; //these next two booleans are to ensure correct animation for walking up and down
-boolean leftFoot = true;
+MapLoader maps;
 
 //IMPORTANT! EACH PIXEL IS 32*32
 //we need to come up with better pixel numbers for the character models
@@ -29,10 +28,9 @@ boolean leftFoot = true;
 void setup(){
   size(320,288);        
   //size(1280,1152);
-  map = loadImage("FuschiaTown2.png");
-  map = map.get(4,2,1280,1152);
-  //map = loadImage("PalletTown2.png");    //20x18
-  //map = map.get(12,10,640,576);
+  maps = new MapLoader();
+  map = maps.getFuschia().getMap();
+  map = maps.getPallet().getMap();
   currentMap = map.get(320,320,width,width);
   xpos = 320;
   ypos = 320;
