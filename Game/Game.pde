@@ -6,6 +6,10 @@ boolean walking;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
 PImage map;
 PImage currentMap;
+PImage leftMap;
+PImage currentLeftMap;
+PImage rightMap;
+PImage currentRightMap;
 PImage gold;
 PImage right;
 PImage left;
@@ -19,6 +23,8 @@ PImage walkingupLeft;
 PImage walkingupRight;
 int xpos = 0;
 int ypos = 0;
+int shiftLeft = 0;
+int shiftRight = 0;
 MapLoader maps;
 
 //IMPORTANT! EACH PIXEL IS 32*32
@@ -26,17 +32,19 @@ MapLoader maps;
 //maybe we can use tiled for this?
 
 void setup(){
-  size(320,288);        
+  size(640,572);        
   //size(1280,1152);
   maps = new MapLoader();
   //map = maps.getFuschia().getMap();
   //map = maps.getPallet().getMap();
   map = maps.getNewBark().getMap();
+  //map = maps.getRoute29().getMap();
   currentMap = map.get(320,320,width,width);
   xpos = 320;
   ypos = 320;
   image(currentMap,0,0);
-  PImage hero = loadImage("Gold.png"); 
+  PImage hero = loadImage("Gold.png");
+ //I was up to here in doubling stuff 
   right = hero.get(0,8,32,32);
   walkingright = hero.get(28,8,32,32);
   left = hero.get(56,8,32,32);
@@ -49,19 +57,26 @@ void setup(){
   walkingupRight = hero.get(274,8,32,32);
   gold = up;
   
-  image(gold,128,128);
+  image(gold,256,256);
 }
 
 //the map now moves as it should instead of gold!!!
 void draw(){
   loadPixels();
+  if(xpos * -1 > 256){
+    println("Lets see if it works");
+    rightMap = map;
+    map = leftMap;
+    xpos = leftMap.width - abs(xpos); 
+    currentStep = xpos;
+  }
   imageMode(CORNER);
   currentMap = map.get(xpos,ypos,width,height);
   image(currentMap,0,0);
   //image(map,0,0);
   imageMode(CORNER);
   //image(gold,xpos,ypos,xpos + 32, ypos + 32);
-  image(gold,128,128);
+  image(gold,256,256);
   cleanUpGold();
   
   //this is for walking to the right animation
@@ -76,11 +91,13 @@ void draw(){
     if(xpos-currentStep >= 32){
       movingRight = false;
       walking = false;
+      gold = right;
     }
   }
   
   //this is for walking to the left animation
   if(movingLeft){
+    println("help" + xpos);
     xpos--;
     cleanUpGold();
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
@@ -88,9 +105,10 @@ void draw(){
     }else{
       gold = left;
     }    
-    if(currentStep-xpos >= 32){
+    if(currentStep-abs(xpos) >= 32){
       movingLeft = false;
       walking = false;
+      gold = left;
     }
   }  
   
@@ -128,14 +146,34 @@ void draw(){
   
   //these bits of code is to make parts of map outside the town BLACK
   if(xpos < 0){
+    /*
     for(int x = 0; x < abs(xpos); x ++){
       for(int y = 0; y < height; y++){
         pixels[x + y * width] = color(0);
       }
     }
+    */
+    //println("Got here 1" + abs(xpos));
+    shiftLeft = abs(xpos);
+    leftMap = maps.getRoute29().getMap();
+    currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
+    image(currentLeftMap,0,0);
+    //fill(240);
+    //rect(0,0,100,100);
+    //image(leftMap,0,0);
+    //HAVING PROBLEMS HERE FROM SWITCHING MAPS
+    /*
+    if(abs(xpos) == 160){
+      println("Lets see if it works");
+      currentRightMap = currentMap;
+      currentMap = currentLeftMap;
+      xpos = leftMap.width - abs(xpos); 
+    }
+    */
   }
-  
+  /*
   if(xpos + width > map.width){
+    println("Got here 2");
     for(int x = width - ((xpos + width) - map.width); x < width; x ++){
       for(int y = 0; y < height; y++){
         pixels[x + y * width] = color(0);
@@ -144,6 +182,7 @@ void draw(){
   }
   
   if(ypos < 0){
+    println("Got here 2");
     for(int x = 0; x < width; x ++){
       for(int y = 0; y < abs(ypos); y++){
         pixels[x + y * width] = color(0);
@@ -151,14 +190,15 @@ void draw(){
     }
   }
   if(ypos + height > map.height){
+    println("Got here 15");
     for(int x = 0; x < width; x ++){
       for(int y = height - ((ypos + height) - map.height); y < height; y++){
         pixels[x + y * width] = color(0);
       }
     }
   }
-  
-  updatePixels();
+  */
+  //updatePixels();
   cleanUpGold();
 }
 
@@ -246,8 +286,8 @@ void cleanUpGold(){
     for(int y = 0; y < 32; y ++){
       color g = gold.pixels[x + y * 32];
       if(g == white){
-        color g2 = currentMap.pixels[(x + 128) + ((y + 128) * width)];
-        pixels[(x + 128) + ((y + 128) * width)] = g2;
+        color g2 = currentMap.pixels[(x + 256) + ((y + 256) * width)];
+        pixels[(x + 256) + ((y + 256) * width)] = g2;
       }
     }
   }
