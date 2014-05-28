@@ -127,7 +127,6 @@ void draw(){
   }
   
   //these bits of code is to make parts of map outside the town BLACK
-  
   if(xpos < 0){
     for(int x = 0; x < abs(xpos); x ++){
       for(int y = 0; y < height; y++){
