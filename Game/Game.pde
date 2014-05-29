@@ -4,6 +4,7 @@ boolean movingUp;
 boolean movingDown;
 boolean walking;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
+Map current;
 PImage map;
 PImage currentMap;
 PImage leftMap;
@@ -37,11 +38,12 @@ void setup(){
   maps = new MapLoader();
   //map = maps.getFuschia().getMap();
   //map = maps.getPallet().getMap();
-  map = maps.getNewBark().getMap();
+  current = maps.getNewBark();
+  map = current.getMap();
   //map = maps.getRoute29().getMap();
-  currentMap = map.get(320,320,width,width);
-  xpos = 320;
-  ypos = 320;
+  currentMap = map.get(160,96,width,width);
+  xpos = 160;
+  ypos = 96;
   image(currentMap,0,0);
   PImage hero = loadImage("Gold.png");
  //I was up to here in doubling stuff 
@@ -67,6 +69,7 @@ void draw(){
     println("Lets see if it works");
     rightMap = map;
     map = leftMap;
+    current = current.getWestMap();
     xpos = leftMap.width - abs(xpos); 
     currentStep = xpos;
   }
@@ -97,15 +100,15 @@ void draw(){
   
   //this is for walking to the left animation
   if(movingLeft){
-    println("help" + xpos);
     xpos--;
+    println("This is the xpos: " + abs(xpos) + ", and this is the currentstep: " + currentStep);
     cleanUpGold();
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingleft;
     }else{
       gold = left;
     }    
-    if(currentStep-abs(xpos) >= 32){
+    if(currentStep-xpos >= 32){
       movingLeft = false;
       walking = false;
       gold = left;
@@ -153,11 +156,15 @@ void draw(){
       }
     }
     */
+    //updatePixels();
     //println("Got here 1" + abs(xpos));
     shiftLeft = abs(xpos);
-    leftMap = maps.getRoute29().getMap();
-    currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
-    image(currentLeftMap,0,0);
+    //leftMap = maps.getRoute29().getMap();
+    if(current.hasWestMap()){
+      leftMap = current.getWestMap().getMap();
+      currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
+      image(currentLeftMap,0,0);
+    }
     //fill(240);
     //rect(0,0,100,100);
     //image(leftMap,0,0);
@@ -171,16 +178,23 @@ void draw(){
     }
     */
   }
-  /*
+  
   if(xpos + width > map.width){
+    /*
     println("Got here 2");
     for(int x = width - ((xpos + width) - map.width); x < width; x ++){
       for(int y = 0; y < height; y++){
         pixels[x + y * width] = color(0);
       }
     }
+    */
+    if(current.hasEastMap()){
+      rightMap = current.getEastMap().getMap();
+      currentRightMap = rightMap.get(0, ypos, (xpos + width) - map.width, height);
+      image(currentRightMap,map.width-xpos,0);
+    }
   }
-  
+  /*
   if(ypos < 0){
     println("Got here 2");
     for(int x = 0; x < width; x ++){
