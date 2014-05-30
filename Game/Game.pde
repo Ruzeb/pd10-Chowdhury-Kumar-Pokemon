@@ -35,7 +35,7 @@ MapLoader maps;
 //maybe we can use tiled for this?
 
 void setup(){
-  size(640,572);        
+  size(640,576);        
   //size(1280,1152);
   maps = new MapLoader();
   //map = maps.getFuschia().getMap();
@@ -123,14 +123,59 @@ void draw(){
     //println("Now false");
   }
   
+  //these bits of code is to make parts of map outside the town BLACK
+  if(xpos < 0){
+    for(int x = 0; x < abs(xpos); x++){
+     fill(0);
+     rect(0,0,x,height); 
+    }
+    shiftLeft = abs(xpos);
+    if(current.hasWestMap()){
+      leftMap = current.getWestMap().getMap();
+      currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
+      image(currentLeftMap,0,0);
+    }
+  }
+  
+  if(xpos + width > map.width){
+    
+    //println("Got here 2");
+    for(int x = width - ((xpos + width) - map.width); x < width; x ++){
+      fill(0);
+      rect(x,0,height,x);
+    }
+    
+    if(current.hasEastMap()){
+      rightMap = current.getEastMap().getMap();
+      currentRightMap = rightMap.get(0, ypos, (xpos + width) - map.width, height);
+      image(currentRightMap,map.width-xpos,0);
+    }
+  }
+  
+  if(ypos < 0){
+    //println("Got here 2");
+    for(int y = 0; y < abs(ypos); y++){
+      fill(0);
+      rect(0,0,width,y);
+      //pixels[x + y * width] = color(0);
+    }
+    
+  }
+  if(ypos + height > map.height){
+    //println("Ypos" + ypos + " ,map height: " + map.height + " ,height: " + height);
+    for(int y = height - ((ypos + height) - map.height); y < height; y++){
+      //println(y);
+      fill(0);
+      rect(0,y,width,y);
+    } 
+  }
+  
   imageMode(CORNER);
   currentMap = map.get(xpos,ypos,width,height);
   image(currentMap,0,0);
   //image(map,0,0);
   imageMode(CORNER);
-  //image(gold,xpos,ypos,xpos + 32, ypos + 32);
   image(gold,256,256);
-  //cleanUpGold();
   
   //this is for walking to the right animation
   if(movingRight){
@@ -151,7 +196,7 @@ void draw(){
   //this is for walking to the left animation
   if(movingLeft){
     xpos--;
-    println("This is the xpos: " + xpos + ", and this is the currentstep: " + currentStep);
+    //println("This is the xpos: " + xpos + ", and this is the currentstep: " + currentStep);
     //cleanUpGold();
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingleft;
@@ -168,6 +213,7 @@ void draw(){
   //animation for moving up
   if(movingUp){
    ypos--;
+   //println("YPOS!" + ypos);
    //cleanUpGold();
    if(abs(ypos) % 8 >= 4){
      gold = walkingupRight;
@@ -197,49 +243,7 @@ void draw(){
    }
   }
   
-  //these bits of code is to make parts of map outside the town BLACK
-  if(xpos < 0){
-    shiftLeft = abs(xpos);
-    if(current.hasWestMap()){
-      leftMap = current.getWestMap().getMap();
-      currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
-      image(currentLeftMap,0,0);
-    }
-  }
-  
-  if(xpos + width > map.width){
-    /*
-    println("Got here 2");
-    for(int x = width - ((xpos + width) - map.width); x < width; x ++){
-      for(int y = 0; y < height; y++){
-        pixels[x + y * width] = color(0);
-      }
-    }
-    */
-    if(current.hasEastMap()){
-      rightMap = current.getEastMap().getMap();
-      currentRightMap = rightMap.get(0, ypos, (xpos + width) - map.width, height);
-      image(currentRightMap,map.width-xpos,0);
-    }
-  }
-  /*
-  if(ypos < 0){
-    println("Got here 2");
-    for(int x = 0; x < width; x ++){
-      for(int y = 0; y < abs(ypos); y++){
-        pixels[x + y * width] = color(0);
-      }
-    }
-  }
-  if(ypos + height > map.height){
-    println("Got here 15");
-    for(int x = 0; x < width; x ++){
-      for(int y = height - ((ypos + height) - map.height); y < height; y++){
-        pixels[x + y * width] = color(0);
-      }
-    }
-  }
-  */
+  //currentMap.updatePixels();
   //updatePixels();
   //cleanUpGold();
 }
