@@ -1,5 +1,6 @@
 public class Map{
  PImage map;
+ PImage mapColl;
  Map northMap;
  Map southMap;
  Map westMap;
@@ -70,5 +71,37 @@ public class Map{
  public boolean hasEastMap(){
    return !(eastMap == null);
  }
+ 
+ public void setMapCollisions(PImage m){
+   mapColl = m;
+ }
+ 
+ public boolean checkValid(int x,int y){
+   map.loadPixels();
+   mapColl.loadPixels();
+   if((x - 240 == -256 && this.hasWestMap()) || (map.width - x + 304 == 288 && this.hasEastMap())){
+     return true;
+   }
+   if(map.height - y + 304 == 288){
+     if(this.hasSouthMap()){
+       return true;
+     }else{
+       return false;
+     }
+   }
+   if(y - 240 == -256){
+     if(this.hasNorthMap()){
+       return true;
+     }else{
+       return false;
+     }
+   }
+   if(map.pixels[x + y * map.width] == mapColl.pixels[x + y * mapColl.width]){
+     return true;
+   }else{
+     return false;
+   }
+ }
+ 
  
 }

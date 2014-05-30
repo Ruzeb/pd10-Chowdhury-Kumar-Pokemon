@@ -38,11 +38,9 @@ void setup(){
   size(640,576);        
   //size(1280,1152);
   maps = new MapLoader();
-  //map = maps.getFuschia().getMap();
-  //map = maps.getPallet().getMap();
   current = maps.getNewBark();
+  //current = maps.getRoute29();
   map = current.getMap();
-  //map = maps.getRoute29().getMap();
   currentMap = map.get(160,96,width,width);
   xpos = -256;
   ypos = 32;
@@ -78,14 +76,14 @@ void setup(){
 
 //the map now moves as it should instead of gold!!!
 void draw(){
-  loadPixels();  
+  loadPixels();
+  println("X: " + xpos + ", Y: " + ypos);
   //switch maps when entering right map
   if(xpos + 256 + 32 > map.width && current.hasEastMap() && !shiftingLeft){
     //println("Lets see if it works");
     leftMap = map;
     map = rightMap;
     current = current.getEastMap();
-    //xpos = map.width - (xpos + 256 +32);
     xpos = -288;
     currentStep = xpos;
   }
@@ -108,13 +106,8 @@ void draw(){
     current = current.getWestMap();
     xpos = leftMap.width - abs(xpos)+1; 
     currentStep = xpos;
-    if(!(currentRightMap == null)){
-      //cleanUpGold(b);
-      //diffCleanUp = true;
-    }
-    //diffCleanUp = true;
-    //println(map.width - xpos - 256);
   }
+  
   //set shiftingleft
   if((gold == walkingleft || gold == left) && map.width-xpos-256 >= 0 && map.width-xpos-256<32){
     //println("Shifting left is true");
@@ -129,10 +122,8 @@ void draw(){
   //this also loads the maps connected to the current one
   
   if(xpos < 0){
-    for(int x = 0; x < abs(xpos); x++){
-     fill(0);
-     rect(0,0,x,height); 
-    }
+    fill(0);
+    rect(0,0,abs(xpos),height);
     shiftLeft = abs(xpos);
     if(current.hasWestMap()){
       leftMap = current.getWestMap().getMap();
@@ -142,11 +133,9 @@ void draw(){
   }
   
   if(xpos + width > map.width){
-    //println("Got here 2");
-    for(int x = width - ((xpos + width) - map.width); x < width; x ++){
-      fill(0);
-      rect(x,0,height,x);
-    }
+    fill(0);
+    int num = width - ((xpos + width) - map.width);
+    rect(num,0,width-num,height);
     
     if(current.hasEastMap()){
       rightMap = current.getEastMap().getMap();
@@ -156,21 +145,15 @@ void draw(){
   }
   
   if(ypos < 0){
-    //println("Got here 2");
-    for(int y = 0; y < abs(ypos); y++){
-      fill(0);
-      rect(0,0,width,y);
-      //pixels[x + y * width] = color(0);
-    }
-    
+    fill(0);
+    rect(0,0,width,abs(ypos));
   }
+  
   if(ypos + height > map.height){
     //println("Ypos" + ypos + " ,map height: " + map.height + " ,height: " + height);
-    for(int y = height - ((ypos + height) - map.height); y < height; y++){
-      //println(y);
-      fill(0);
-      rect(0,y,width,y);
-    } 
+    int num = height - ((ypos + height) - map.height);
+    fill(0);
+    rect(0,num,width,height-num); 
   }
   
   imageMode(CORNER);
@@ -183,7 +166,6 @@ void draw(){
   //this is for walking to the right animation
   if(movingRight){
     xpos++;
-    //cleanUpGold();
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingright;
     }else{
@@ -199,8 +181,6 @@ void draw(){
   //this is for walking to the left animation
   if(movingLeft){
     xpos--;
-    //println("This is the xpos: " + xpos + ", and this is the currentstep: " + currentStep);
-    //cleanUpGold();
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingleft;
     }else{
@@ -216,8 +196,6 @@ void draw(){
   //animation for moving up
   if(movingUp){
    ypos--;
-   //println("YPOS!" + ypos);
-   //cleanUpGold();
    if(abs(ypos) % 8 >= 4){
      gold = walkingupRight;
    }else{
@@ -233,7 +211,6 @@ void draw(){
   //animation for moving down
   if(movingDown){
    ypos++;
-   //cleanUpGold();
    if(abs(ypos) % 8 >= 4){
      gold = walkingdownRight;
    }else{
@@ -246,17 +223,16 @@ void draw(){
    }
   }
   
-  //currentMap.updatePixels();
-  //updatePixels();
-  //cleanUpGold();
+  
 }
 
 //this is used to move the character
 
 void keyPressed(){
   if(key == CODED){
+    //working over here
     if(keyCode == DOWN && !(walking)){
-      if(gold == down || gold == walkingdownRight || gold == walkingdownLeft){
+      if((gold == down || gold == walkingdownRight || gold == walkingdownLeft) && current.checkValid(xpos+272,ypos+304)){
         movingDown = true;
         walking = true;
         currentStep = ypos;
@@ -265,7 +241,7 @@ void keyPressed(){
       }
     }
     if(keyCode == UP && !(walking)){
-      if(gold == up || gold == walkingupRight || gold == walkingupLeft){
+      if((gold == up || gold == walkingupRight || gold == walkingupLeft) && current.checkValid(xpos+272,ypos+240)){
         movingUp = true;
         walking = true;
         currentStep = ypos;
@@ -274,7 +250,7 @@ void keyPressed(){
       }      
     }
     if(keyCode == RIGHT && !(walking)){
-      if(gold == right || gold == walkingright){
+      if((gold == right || gold == walkingright) && current.checkValid(xpos+304,ypos+272)){
         movingRight = true;
         walking = true;
         currentStep = xpos;
@@ -283,7 +259,7 @@ void keyPressed(){
       }      
     }
     if(keyCode == LEFT && !(walking)){
-      if(gold == left || gold == walkingleft){
+      if((gold == left || gold == walkingleft) && current.checkValid(xpos+240,ypos+272)){
         movingLeft = true;
         walking = true;
         currentStep = xpos;
@@ -293,25 +269,6 @@ void keyPressed(){
     }     
   }
 }
-
-//dont need this for now I think
-/*
-void keyReleased(){
-  if(gold == walkingleft){
-    gold = left;
-  }
-  if(gold == walkingright){
-    gold = right;
-  }
-  if(gold == walkingdownRight || gold == walkingdownLeft){
-    gold = down;
-  }
-  if(gold == walkingupLeft || gold == walkingupRight){
-    gold = up;
-  }
-}
-*/
-
 
 PImage cleanUpImage(PImage p){
  PImage newImg = createImage(p.width,p.height,ARGB);
@@ -347,37 +304,4 @@ PImage cleanUpImage(PImage p){
   return newImg; 
 }
 
-//this method cleans up the character models
-//by removing the white space around them
-//and also the dots from neighboring sprites in the "Gold.png"
-void cleanUpGold(){
-  //loadPixels();
-  //currentMap.loadPixels();
-  //gold.loadPixels();
-  color white = gold.pixels[0];
-  /*
-  for(int y = 0; y < 32; y ++){
-    color g = gold.pixels[31 + y * 32];
-    color g2 = gold.pixels[30 + y * 32];
-    if(!(g == white)){
-      gold.pixels[31 + y * 32] = white;
-    }
-    if(!(g2 == white)){
-      gold.pixels[30 + y * 32] = white;
-    }
-  }
-  */
-  //gold.updatePixels();
-  /*
-  for(int x = 0; x < 32; x ++){ 
-    for(int y = 0; y < 32; y ++){
-      color g = gold.pixels[x + y * 32];
-      if(g == white){
-        color g2 = currentMap.pixels[(x + 256) + ((y + 256) * width)];
-        pixels[(x + 256) + ((y + 256) * width)] = g2;
-      }
-    }
-  }
-  */
-  //updatePixels();
-}
+

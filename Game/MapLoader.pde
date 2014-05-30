@@ -10,9 +10,11 @@ public class MapLoader{
   
   maps[2] = new Map("NewBarkTown");
   maps[2].setMap(loadImage("NewBarkTown.png").get(596,5,768,576));
+  maps[2].setMapCollisions(loadImage("NewBarkTownColl.png").get(596,5,768,576));
   
   maps[3] = new Map("Route29");
   maps[3].setMap(loadImage("Route29.png").get(0,0,1920,576));
+  maps[3].setMapCollisions(loadImage("Route29Coll.png").get(0,0,1920,576));
   
   //Setting wests,norths,souths
   maps[2].setWestMap(maps[3]);
