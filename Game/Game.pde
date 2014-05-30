@@ -44,8 +44,8 @@ void setup(){
   map = current.getMap();
   //map = maps.getRoute29().getMap();
   currentMap = map.get(160,96,width,width);
-  xpos = 160;
-  ypos = 96;
+  xpos = -256;
+  ypos = 32;
   image(currentMap,0,0);
   PImage hero = loadImage("Gold.png");
  //I was up to here in doubling stuff 
@@ -66,7 +66,7 @@ void setup(){
 
 //the map now moves as it should instead of gold!!!
 void draw(){
-  loadPixels();
+  loadPixels();  
   if(xpos + 256 + 32 > map.width && current.hasEastMap() && !shiftingLeft){
     println("Lets see if it works");
     leftMap = map;
@@ -78,12 +78,12 @@ void draw(){
   }
   
   //working over here now!
-  if((gold == walkingright || gold == right) && map.width-xpos-256 >= 0 && map.width-xpos-256<32){
-    println("Shifting left is true");
-    shiftingLeft = true;
+  if((gold == walkingright || gold == right) && xpos >= -288 && xpos < -256){
+    println("Shifting right is true");
+    shiftingRight = true;
   }
-  if(map.width-xpos-256==32){
-    shiftingLeft = false;
+  if(xpos==-256){
+    shiftingRight = false;
     println("Now false");
   }
   
