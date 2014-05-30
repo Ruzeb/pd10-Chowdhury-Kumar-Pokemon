@@ -48,7 +48,7 @@ void setup(){
   ypos = 32;
   image(currentMap,0,0);
   PImage hero = loadImage("Gold.png");
- //I was up to here in doubling stuff 
+  //loading all of the models 
   right = hero.get(0,8,32,32);
   walkingright = hero.get(28,8,32,32);
   left = hero.get(56,8,32,32);
@@ -60,6 +60,7 @@ void setup(){
   walkingupLeft = hero.get(244,8,32,32);
   walkingupRight = hero.get(274,8,32,32);
   
+  //cleaning up each image
   right = cleanUpImage(right);
   walkingright = cleanUpImage(walkingright);
   left = cleanUpImage(left);
@@ -78,7 +79,7 @@ void setup(){
 //the map now moves as it should instead of gold!!!
 void draw(){
   loadPixels();  
-  
+  //switch maps when entering right map
   if(xpos + 256 + 32 > map.width && current.hasEastMap() && !shiftingLeft){
     //println("Lets see if it works");
     leftMap = map;
@@ -89,7 +90,7 @@ void draw(){
     currentStep = xpos;
   }
   
-  //working over here now!
+  //set shiftingright 
   if((gold == walkingright || gold == right) && xpos >= -288 && xpos < -256){
     //println("Shifting right is true");
     shiftingRight = true;
@@ -99,7 +100,7 @@ void draw(){
     //println("Now false");
   }
   
-  
+  //switch maps when entering left map
   if(xpos * -1 > 256 && current.hasWestMap() && !shiftingRight){
     //println("Or not");
     rightMap = map;
@@ -114,6 +115,7 @@ void draw(){
     //diffCleanUp = true;
     //println(map.width - xpos - 256);
   }
+  //set shiftingleft
   if((gold == walkingleft || gold == left) && map.width-xpos-256 >= 0 && map.width-xpos-256<32){
     //println("Shifting left is true");
     shiftingLeft = true;
@@ -124,6 +126,8 @@ void draw(){
   }
   
   //these bits of code is to make parts of map outside the town BLACK
+  //this also loads the maps connected to the current one
+  
   if(xpos < 0){
     for(int x = 0; x < abs(xpos); x++){
      fill(0);
@@ -138,7 +142,6 @@ void draw(){
   }
   
   if(xpos + width > map.width){
-    
     //println("Got here 2");
     for(int x = width - ((xpos + width) - map.width); x < width; x ++){
       fill(0);
