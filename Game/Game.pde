@@ -59,6 +59,17 @@ void setup(){
   up = hero.get(212,8,32,32);
   walkingupLeft = hero.get(244,8,32,32);
   walkingupRight = hero.get(274,8,32,32);
+  
+  right = cleanUpImage(right);
+  walkingright = cleanUpImage(walkingright);
+  left = cleanUpImage(left);
+  walkingleft = cleanUpImage(walkingleft);
+  down = cleanUpImage(down);
+  walkingdownLeft = cleanUpImage(walkingdownLeft);
+  walkingdownRight = cleanUpImage(walkingdownRight);
+  up = cleanUpImage(up);
+  walkingupLeft = cleanUpImage(walkingupLeft);
+  walkingupRight = cleanUpImage(walkingupRight);
   gold = up;
   
   image(gold,256,256);
@@ -67,8 +78,9 @@ void setup(){
 //the map now moves as it should instead of gold!!!
 void draw(){
   loadPixels();  
+  
   if(xpos + 256 + 32 > map.width && current.hasEastMap() && !shiftingLeft){
-    println("Lets see if it works");
+    //println("Lets see if it works");
     leftMap = map;
     map = rightMap;
     current = current.getEastMap();
@@ -79,17 +91,17 @@ void draw(){
   
   //working over here now!
   if((gold == walkingright || gold == right) && xpos >= -288 && xpos < -256){
-    println("Shifting right is true");
+    //println("Shifting right is true");
     shiftingRight = true;
   }
   if(xpos==-256){
     shiftingRight = false;
-    println("Now false");
+    //println("Now false");
   }
   
   
   if(xpos * -1 > 256 && current.hasWestMap() && !shiftingRight){
-    println("Or not");
+    //println("Or not");
     rightMap = map;
     map = leftMap;
     current = current.getWestMap();
@@ -100,15 +112,15 @@ void draw(){
       //diffCleanUp = true;
     }
     //diffCleanUp = true;
-    println(map.width - xpos - 256);
+    //println(map.width - xpos - 256);
   }
   if((gold == walkingleft || gold == left) && map.width-xpos-256 >= 0 && map.width-xpos-256<32){
-    println("Shifting left is true");
+    //println("Shifting left is true");
     shiftingLeft = true;
   }
   if(map.width-xpos-256==32){
     shiftingLeft = false;
-    println("Now false");
+    //println("Now false");
   }
   
   imageMode(CORNER);
@@ -118,12 +130,12 @@ void draw(){
   imageMode(CORNER);
   //image(gold,xpos,ypos,xpos + 32, ypos + 32);
   image(gold,256,256);
-  cleanUpGold();
+  //cleanUpGold();
   
   //this is for walking to the right animation
   if(movingRight){
     xpos++;
-    cleanUpGold();
+    //cleanUpGold();
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingright;
     }else{
@@ -139,8 +151,8 @@ void draw(){
   //this is for walking to the left animation
   if(movingLeft){
     xpos--;
-    println("This is the xpos: " + abs(xpos) + ", and this is the currentstep: " + currentStep);
-    cleanUpGold();
+    println("This is the xpos: " + xpos + ", and this is the currentstep: " + currentStep);
+    //cleanUpGold();
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
       gold = walkingleft;
     }else{
@@ -156,7 +168,7 @@ void draw(){
   //animation for moving up
   if(movingUp){
    ypos--;
-   cleanUpGold();
+   //cleanUpGold();
    if(abs(ypos) % 8 >= 4){
      gold = walkingupRight;
    }else{
@@ -172,7 +184,7 @@ void draw(){
   //animation for moving down
   if(movingDown){
    ypos++;
-   cleanUpGold();
+   //cleanUpGold();
    if(abs(ypos) % 8 >= 4){
      gold = walkingdownRight;
    }else{
@@ -187,34 +199,12 @@ void draw(){
   
   //these bits of code is to make parts of map outside the town BLACK
   if(xpos < 0){
-    /*
-    for(int x = 0; x < abs(xpos); x ++){
-      for(int y = 0; y < height; y++){
-        pixels[x + y * width] = color(0);
-      }
-    }
-    */
-    //updatePixels();
-    //println("Got here 1" + abs(xpos));
     shiftLeft = abs(xpos);
-    //leftMap = maps.getRoute29().getMap();
     if(current.hasWestMap()){
       leftMap = current.getWestMap().getMap();
       currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
       image(currentLeftMap,0,0);
     }
-    //fill(240);
-    //rect(0,0,100,100);
-    //image(leftMap,0,0);
-    //HAVING PROBLEMS HERE FROM SWITCHING MAPS
-    /*
-    if(abs(xpos) == 160){
-      println("Lets see if it works");
-      currentRightMap = currentMap;
-      currentMap = currentLeftMap;
-      xpos = leftMap.width - abs(xpos); 
-    }
-    */
   }
   
   if(xpos + width > map.width){
@@ -251,7 +241,7 @@ void draw(){
   }
   */
   //updatePixels();
-  cleanUpGold();
+  //cleanUpGold();
 }
 
 //this is used to move the character
@@ -315,14 +305,50 @@ void keyReleased(){
 }
 */
 
+
+PImage cleanUpImage(PImage p){
+ PImage newImg = createImage(p.width,p.height,ARGB);
+ newImg.loadPixels();
+ p.loadPixels();
+ color white = p.pixels[0];
+  //to get of black dots
+  
+  for(int y = 0; y < 32; y ++){
+    color g = p.pixels[31 + y * 32];
+    color g2 = p.pixels[30 + y * 32];
+    if(!(g == white)){
+      p.pixels[31 + y * 32] = white;
+    }
+    if(!(g2 == white)){
+      p.pixels[30 + y * 32] = white;
+    }
+  }
+  
+  //make it transparent
+  for(int x = 0; x < 32; x ++){ 
+    for(int y = 0; y < 32; y ++){
+      color g = p.pixels[x + y * 32];
+      if(g == white){
+        newImg.pixels[x + y * 32] = color(0,0,0,0);
+      }else{
+        newImg.pixels[x + y * 32] = p.pixels[x + y * 32];
+      }
+    }
+  }
+  
+  newImg.updatePixels();
+  return newImg; 
+}
+
 //this method cleans up the character models
 //by removing the white space around them
 //and also the dots from neighboring sprites in the "Gold.png"
 void cleanUpGold(){
-  loadPixels();
-  currentMap.loadPixels();
-  gold.loadPixels();
+  //loadPixels();
+  //currentMap.loadPixels();
+  //gold.loadPixels();
   color white = gold.pixels[0];
+  /*
   for(int y = 0; y < 32; y ++){
     color g = gold.pixels[31 + y * 32];
     color g2 = gold.pixels[30 + y * 32];
@@ -333,7 +359,9 @@ void cleanUpGold(){
       gold.pixels[30 + y * 32] = white;
     }
   }
-  gold.updatePixels();
+  */
+  //gold.updatePixels();
+  /*
   for(int x = 0; x < 32; x ++){ 
     for(int y = 0; y < 32; y ++){
       color g = gold.pixels[x + y * 32];
@@ -343,5 +371,6 @@ void cleanUpGold(){
       }
     }
   }
-  updatePixels();
+  */
+  //updatePixels();
 }
