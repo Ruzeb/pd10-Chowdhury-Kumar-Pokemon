@@ -77,93 +77,65 @@ void setup(){
 //the map now moves as it should instead of gold!!!
 void draw(){
   loadPixels();
-  println("X: " + xpos + ", Y: " + ypos);
-  //switch maps when entering right map
-  if(xpos + 256 + 32 > map.width && current.hasEastMap() && !shiftingLeft){
-    //println("Lets see if it works");
-    leftMap = map;
-    map = rightMap;
-    current = current.getEastMap();
-    xpos = -288;
-    currentStep = xpos;
-  }
+  //println("X: " + xpos + ", Y: " + ypos);
   
-  //set shiftingright 
-  if((gold == walkingright || gold == right) && xpos >= -288 && xpos < -256){
-    //println("Shifting right is true");
-    shiftingRight = true;
-  }
-  if(xpos==-256){
-    shiftingRight = false;
-    //println("Now false");
-  }
-  
-  //switch maps when entering left map
-  if(xpos * -1 > 256 && current.hasWestMap() && !shiftingRight){
-    //println("Or not");
-    rightMap = map;
-    map = leftMap;
-    current = current.getWestMap();
-    xpos = leftMap.width - abs(xpos)+1; 
-    currentStep = xpos;
-  }
-  
-  //set shiftingleft
-  if((gold == walkingleft || gold == left) && map.width-xpos-256 >= 0 && map.width-xpos-256<32){
-    //println("Shifting left is true");
-    shiftingLeft = true;
-  }
-  if(map.width-xpos-256==32){
-    shiftingLeft = false;
-    //println("Now false");
-  }
-  
-  //these bits of code is to make parts of map outside the town BLACK
-  //this also loads the maps connected to the current one
-  
-  if(xpos < 0){
-    fill(0);
-    rect(0,0,abs(xpos),height);
-    shiftLeft = abs(xpos);
-    if(current.hasWestMap()){
-      leftMap = current.getWestMap().getMap();
-      currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
-      image(currentLeftMap,0,0);
-    }
-  }
-  
-  if(xpos + width > map.width){
-    fill(0);
-    int num = width - ((xpos + width) - map.width);
-    rect(num,0,width-num,height);
-    
-    if(current.hasEastMap()){
-      rightMap = current.getEastMap().getMap();
-      currentRightMap = rightMap.get(0, ypos, (xpos + width) - map.width, height);
-      image(currentRightMap,map.width-xpos,0);
-    }
-  }
-  
-  if(ypos < 0){
-    fill(0);
-    rect(0,0,width,abs(ypos));
-  }
-  
-  if(ypos + height > map.height){
-    //println("Ypos" + ypos + " ,map height: " + map.height + " ,height: " + height);
-    int num = height - ((ypos + height) - map.height);
-    fill(0);
-    rect(0,num,width,height-num); 
-  }
+  setNewMap();
+  loadBorders();
   
   imageMode(CORNER);
   currentMap = map.get(xpos,ypos,width,height);
   image(currentMap,0,0);
-  //image(map,0,0);
   imageMode(CORNER);
   image(gold,256,256);
   
-  //this is for walking to the right animation
+  walkingAnimation();
+}
+
+//this is used to move the character
+
+void keyPressed(){
+  if(key == CODED){
+    //working over here
+    if(keyCode == DOWN && !(walking)){
+      if((gold == down || gold == walkingdownRight || gold == walkingdownLeft) && current.checkValid(xpos+272,ypos+304)){
+        movingDown = true;
+        walking = true;
+        currentStep = ypos;
+      }else{
+        gold = down;
+      }
+    }
+    if(keyCode == UP && !(walking)){
+      if((gold == up || gold == walkingupRight || gold == walkingupLeft) && current.checkValid(xpos+272,ypos+240)){
+        movingUp = true;
+        walking = true;
+        currentStep = ypos;
+      }else{
+        gold = up;
+      }      
+    }
+    if(keyCode == RIGHT && !(walking)){
+      if((gold == right || gold == walkingright) && current.checkValid(xpos+304,ypos+272)){
+        movingRight = true;
+        walking = true;
+        currentStep = xpos;
+      }else{
+        gold = right;
+      }      
+    }
+    if(keyCode == LEFT && !(walking)){
+      if((gold == left || gold == walkingleft) && current.checkValid(xpos+240,ypos+272)){
+        movingLeft = true;
+        walking = true;
+        currentStep = xpos;
+      }else{
+        gold = left;
+      }
+    }     
+  }
+}
+
+void walkingAnimation(){
   if(movingRight){
     xpos++;
     if(abs(xpos) % 8 >= 4){   //makes him walk smoothly
@@ -222,52 +194,85 @@ void draw(){
      gold = down;
    }
   }
-  
-  
 }
 
-//this is used to move the character
-
-void keyPressed(){
-  if(key == CODED){
-    //working over here
-    if(keyCode == DOWN && !(walking)){
-      if((gold == down || gold == walkingdownRight || gold == walkingdownLeft) && current.checkValid(xpos+272,ypos+304)){
-        movingDown = true;
-        walking = true;
-        currentStep = ypos;
-      }else{
-        gold = down;
-      }
+void loadBorders(){
+  if(xpos < 0){
+    fill(0);
+    rect(0,0,abs(xpos),height);
+    shiftLeft = abs(xpos);
+    if(current.hasWestMap()){
+      leftMap = current.getWestMap().getMap();
+      currentLeftMap = leftMap.get(leftMap.width - abs(xpos), ypos, abs(xpos), height);
+      image(currentLeftMap,0,0);
     }
-    if(keyCode == UP && !(walking)){
-      if((gold == up || gold == walkingupRight || gold == walkingupLeft) && current.checkValid(xpos+272,ypos+240)){
-        movingUp = true;
-        walking = true;
-        currentStep = ypos;
-      }else{
-        gold = up;
-      }      
-    }
-    if(keyCode == RIGHT && !(walking)){
-      if((gold == right || gold == walkingright) && current.checkValid(xpos+304,ypos+272)){
-        movingRight = true;
-        walking = true;
-        currentStep = xpos;
-      }else{
-        gold = right;
-      }      
-    }
-    if(keyCode == LEFT && !(walking)){
-      if((gold == left || gold == walkingleft) && current.checkValid(xpos+240,ypos+272)){
-        movingLeft = true;
-        walking = true;
-        currentStep = xpos;
-      }else{
-        gold = left;
-      }
-    }     
   }
+  
+  if(xpos + width > map.width){
+    fill(0);
+    int num = width - ((xpos + width) - map.width);
+    rect(num,0,width-num,height);
+    
+    if(current.hasEastMap()){
+      rightMap = current.getEastMap().getMap();
+      currentRightMap = rightMap.get(0, ypos, (xpos + width) - map.width, height);
+      image(currentRightMap,map.width-xpos,0);
+    }
+  }
+  
+  if(ypos < 0){
+    fill(0);
+    rect(0,0,width,abs(ypos));
+  }
+  
+  if(ypos + height > map.height){
+    //println("Ypos" + ypos + " ,map height: " + map.height + " ,height: " + height);
+    int num = height - ((ypos + height) - map.height);
+    fill(0);
+    rect(0,num,width,height-num); 
+  } 
+}
+
+void setNewMap(){
+  //switch maps when entering right map
+  if(xpos + 256 + 32 > map.width && current.hasEastMap() && !shiftingLeft){
+    //println("Lets see if it works");
+    leftMap = map;
+    map = rightMap;
+    current = current.getEastMap();
+    xpos = -288;
+    currentStep = xpos;
+  }
+  
+  //set shiftingright 
+  if((gold == walkingright || gold == right) && xpos >= -288 && xpos < -256){
+    //println("Shifting right is true");
+    shiftingRight = true;
+  }
+  if(xpos==-256){
+    shiftingRight = false;
+    //println("Now false");
+  }
+  
+  //switch maps when entering left map
+  if(xpos * -1 > 256 && current.hasWestMap() && !shiftingRight){
+    //println("Or not");
+    rightMap = map;
+    map = leftMap;
+    current = current.getWestMap();
+    xpos = leftMap.width - abs(xpos)+1; 
+    currentStep = xpos;
+  }
+  
+  //set shiftingleft
+  if((gold == walkingleft || gold == left) && map.width-xpos-256 >= 0 && map.width-xpos-256<32){
+    //println("Shifting left is true");
+    shiftingLeft = true;
+  }
+  if(map.width-xpos-256==32){
+    shiftingLeft = false;
+    //println("Now false");
+  } 
 }
 
 PImage cleanUpImage(PImage p){
