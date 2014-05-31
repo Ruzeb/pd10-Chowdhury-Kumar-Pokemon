@@ -275,7 +275,7 @@ PImage cleanUpImage(PImage p){
  newImg.loadPixels();
  p.loadPixels();
  color white = p.pixels[0];
-  //to get of black dots
+  //to get rid of black dots
   
   for(int y = 0; y < 32; y ++){
     color g = p.pixels[31 + y * 32];
