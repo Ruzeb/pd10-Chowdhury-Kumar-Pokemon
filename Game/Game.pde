@@ -7,6 +7,8 @@ boolean shiftingRight = false;
 boolean shiftingLeft = false;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
 
+boolean traveling = true;
+
 Map current;
 PImage map;
 PImage currentMap;
@@ -84,21 +86,23 @@ void setup(){
  //image(enemy1.getFront(), xpos+32, ypos);
 }
 
-//the map now moves as it should instead of gold!!!
-void draw(){
-  loadPixels();
-  //println("X: " + xpos + ", Y: " + ypos);
-  
-  setNewMap();
-  loadBorders();
-  
-  imageMode(CORNER);
-  currentMap = map.get(xpos,ypos,width,height);
-  image(currentMap,0,0);
-  imageMode(CORNER);
-  image(gold,256,256);
-  //image(enemy1.getFront(), xpos+32, ypos);
-  walkingAnimation();
+//grass color is -16777066
+void draw(){    
+  if(traveling){
+    //loadPixels();
+    //println("X: " + xpos + ", Y: " + ypos);
+    
+    setNewMap();
+    loadBorders();
+    
+    imageMode(CORNER);
+    currentMap = map.get(xpos,ypos,width,height);
+    image(currentMap,0,0);
+    //image(enemy1.getFront(), 160-xpos, 160-ypos);
+    imageMode(CORNER);
+    image(gold,256,256);
+    walkingAnimation();
+  }
 }
 
 //this is used to move the character
@@ -157,6 +161,9 @@ void walkingAnimation(){
       movingRight = false;
       walking = false;
       gold = right;
+      if(checkBattle(xpos,ypos)){
+        traveling = false; 
+      }
     }
   }
   
@@ -172,6 +179,9 @@ void walkingAnimation(){
       movingLeft = false;
       walking = false;
       gold = left;
+      if(checkBattle(xpos,ypos)){
+        traveling = false; 
+      }
     }
   }  
   
@@ -187,6 +197,9 @@ void walkingAnimation(){
      movingUp = false;
      walking = false;
      gold = up;
+     if(checkBattle(xpos,ypos)){
+        traveling = false; 
+     }
    }
   }
   
@@ -202,6 +215,9 @@ void walkingAnimation(){
      movingDown = false;
      walking = false;
      gold = down;
+     if(checkBattle(xpos,ypos)){
+        traveling = false; 
+     }
    }
   }
 }

@@ -79,6 +79,10 @@ public class Map{
    mapColl = m;
  }
  
+ public PImage getMapCollisions(){
+   return mapColl; 
+ }
+ 
  public void addPokemon(Pokemon p){
    pokeList.add(p); 
  }
@@ -109,11 +113,22 @@ public class Map{
        return false;
      }
    }
-   if(map.pixels[x + y * map.width] == mapColl.pixels[x + y * mapColl.width]){
+   //if(map.pixels[x + y * map.width] == mapColl.pixels[x + y * mapColl.width]){
+     if(!(mapColl.pixels[x + y * mapColl.width] == -8388608)){
      return true;
    }else{
      return false;
    }
+ }
+ 
+ public boolean checkBattle(int x,int y){
+   if(mapColl.pixels[x + y * mapColl.width] == -16777066){
+      Random r = new Random();
+      if(r.nextInt(10) == 5){
+        return true; 
+      }
+   }
+   return false; 
  }
  
  
