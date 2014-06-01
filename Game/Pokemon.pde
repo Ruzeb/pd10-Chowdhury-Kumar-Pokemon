@@ -5,14 +5,13 @@ public class Pokemon{
   private int defense;
   private int agility;
   private int accuracy;
+  private int level;
   private String name;
-  private PImage front;
-  private PImage back;
   private ArrayList<Moves> moves;
   private PImage back;
   private PImage front;
   
-  public void Pokemon(int h, int at, int d, int a, int acc,String n, ArrayList<Moves> m){
+  public Pokemon(int h, int at, int d, int a, int acc,String n, ArrayList<Moves> m){
     this.health = h;
     this.attack = at;
     this.defense = d;
@@ -23,8 +22,16 @@ public class Pokemon{
   }
   
   //this constructor is just being used for testing purposes
-  public void Pokemon(){
+  public Pokemon(){
     
+  }
+  
+  public void setLevel(int i){
+    level = i;
+  }
+  
+  public int returnLevel(){
+    return level; 
   }
   
   public void setFront(PImage p){

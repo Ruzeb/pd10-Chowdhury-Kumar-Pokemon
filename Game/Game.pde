@@ -6,6 +6,7 @@ boolean walking;
 boolean shiftingRight = false;
 boolean shiftingLeft = false;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
+
 Map current;
 PImage map;
 PImage currentMap;
@@ -25,6 +26,7 @@ PImage walkingdownRight;
 PImage up;
 PImage walkingupLeft;
 PImage walkingupRight;
+Trainer player;
 
 int xpos = 0;
 int ypos = 0;
@@ -37,16 +39,16 @@ MapLoader maps;
 //maybe we can use tiled for this?
 
 void setup(){
-  size(640,576);        
-  //size(1280,1152);
+  size(640,576);      
+  
   maps = new MapLoader();
   current = maps.getNewBark();
-  //current = maps.getRoute29();
   map = current.getMap();
-  currentMap = map.get(160,96,width,width);
   xpos = -256;
   ypos = 32;
+  currentMap = map.get(xpos,ypos,width,width);
   image(currentMap,0,0);
+  
   PImage hero = loadImage("Gold.png");
   //loading all of the models 
   right = hero.get(0,8,32,32);

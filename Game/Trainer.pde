@@ -1,6 +1,5 @@
 public class Trainer{
   
-  private int health;
   private ArrayList<Pokemon> pokemon;
   private PImage battleFront;
   private PImage mapFront;
@@ -10,8 +9,7 @@ public class Trainer{
   private int locY;
   private String textBox = "";
   
-  public void Trainer(int h, String n, ArrayList<Pokemon> p, int x, int y){
-    this.health = h;
+  public void Trainer(String n, ArrayList<Pokemon> p, int x, int y){
     this.name = n;
     this.pokemon = p;
     this.locX = x;
@@ -22,9 +20,6 @@ public class Trainer{
     return "( " + locX + " , " + locY + " )";
   }
   
-  public int getHealth(){
-    return this.health;
-  }
   
   public String getName(){
     return this.name;
@@ -32,14 +27,6 @@ public class Trainer{
   
   public ArrayList<Pokemon> getPokemon(){
     return this.pokemon;
-  }
-  
-  public void setHealth(int h){
-    this.health = h;
-  }
-  
-  public void addHealth(int h){
-    this.setHealth(this.getHealth() + h);
   }
   
   public String getText(){

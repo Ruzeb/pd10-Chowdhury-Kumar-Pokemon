@@ -8,7 +8,7 @@ public class Map{
  Map westMap;
  Map eastMap;
  String name;
- ArrayList<Pokemon> pokeList;
+ ArrayList<Pokemon> pokeList = new ArrayList<Pokemon>();
   
   
  public Map(String s){
