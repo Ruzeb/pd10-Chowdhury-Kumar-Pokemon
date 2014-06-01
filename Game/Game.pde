@@ -8,6 +8,7 @@ boolean shiftingLeft = false;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
 
 boolean traveling = true;
+boolean loadBattle;
 boolean startBattle;
 boolean startText;
 boolean movingPlayer;
@@ -169,6 +170,9 @@ void draw(){
     image(gold,256,256);
     walkingAnimation();
   }
+  if(loadBattle){
+    loadUp();
+  }
   if(startBattle){
     fill(255);
     noTint();
@@ -183,6 +187,7 @@ void draw(){
     if(trainerXPos > 36){
       trainerXPos = trainerXPos - 8;
     }else{
+      noTint();
       startBattle = false;
       startText = true;
     }
@@ -191,7 +196,6 @@ void draw(){
     }
   }
   if(startText){
-    noTint();
     fill(255);
     rect(0,0,width,height);
     image(textBox,0,height-textBox.height);
@@ -397,7 +401,7 @@ void walkingAnimation(){
       gold = right;
       if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
-        startBattle = true;
+        loadBattle = true;
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
@@ -422,7 +426,7 @@ void walkingAnimation(){
       gold = left;
       if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
-        startBattle = true;
+        loadBattle = true;
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
@@ -447,7 +451,7 @@ void walkingAnimation(){
      gold = up;
      if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
-        startBattle = true;
+        loadBattle = true;
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
@@ -472,7 +476,7 @@ void walkingAnimation(){
      gold = down;
      if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
-        startBattle = true;
+        loadBattle = true;
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
@@ -561,6 +565,36 @@ void setNewMap(){
     shiftingLeft = false;
     //println("Now false");
   } 
+}
+
+void loadUp(){
+  if(count%30 > 20){
+     tint(100,0,0);
+  }else{
+    if(count%30 > 10){
+      noTint(); 
+    }else{
+      if(count%30 > 0){
+        tint(100); 
+      }
+    }
+  }
+  if(count == 60){
+    loadBattle = false;
+    startBattle = true;
+    count = 0;
+  }
+  setNewMap();
+  loadBorders();
+  imageMode(CORNER);
+  currentMap = map.get(xpos,ypos,width,height);
+  image(currentMap,0,0);
+  //image(enemy1.getFront(), 160-xpos, 160-ypos);
+  imageMode(CORNER);
+  noTint();
+  image(gold,256,256);
+  walkingAnimation(); 
+  count ++;
 }
 
 void drawDownArrow(){
