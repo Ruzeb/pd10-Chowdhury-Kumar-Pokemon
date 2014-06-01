@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Map{
  PImage map;
  PImage mapColl;
@@ -6,6 +8,7 @@ public class Map{
  Map westMap;
  Map eastMap;
  String name;
+ ArrayList<Pokemon> pokeList;
   
   
  public Map(String s){
@@ -74,6 +77,16 @@ public class Map{
  
  public void setMapCollisions(PImage m){
    mapColl = m;
+ }
+ 
+ public void addPokemon(Pokemon p){
+   pokeList.add(p); 
+ }
+ 
+ public Pokemon getRandPokemon(){
+    Random r = new Random();
+    int i = r.nextInt(pokeList.size());
+    return pokeList.get(i);
  }
  
  public boolean checkValid(int x,int y){

@@ -10,16 +10,16 @@ public class Trainer{
   private int locY;
   private String textBox = "";
   
-  public void Trainer(int h, String n, ArrayList<Pokemon>, int x, int y){
+  public void Trainer(int h, String n, ArrayList<Pokemon> p, int x, int y){
     this.health = h;
     this.name = n;
     this.pokemon = p;
     this.locX = x;
-    this.loxY = y;
+    this.locY = y;
   }
   
   public String getLocation(){
-    return "( " + x + " , " + y + " )"
+    return "( " + locX + " , " + locY + " )";
   }
   
   public int getHealth(){
@@ -39,7 +39,7 @@ public class Trainer{
   }
   
   public void addHealth(int h){
-    this.setHealth(this.getHealth + h);
+    this.setHealth(this.getHealth() + h);
   }
   
   public String getText(){

@@ -16,6 +16,7 @@ public class MapLoader{
   maps[3].setMap(loadImage("Route29.png").get(0,0,1920,576));
   maps[3].setMapCollisions(loadImage("Route29Coll.png").get(0,0,1920,576));
   
+  
   //Setting wests,norths,souths
   maps[2].setWestMap(maps[3]);
   maps[3].setEastMap(maps[2]);

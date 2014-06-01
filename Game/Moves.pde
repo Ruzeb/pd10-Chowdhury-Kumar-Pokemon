@@ -20,26 +20,28 @@ public class Moves{
     return this.accuracy;
   }
   
-  public boolean canHit(){
-    if ((this.getAccuracy() * (this.user.getAccuracy() / target.getPokeEvasion)) > 1 && 
+  public boolean canHit(Pokemon target){
+    if ((this.getAccuracy() * (this.user.getAccuracy() / target.getPokeEvasion())) > 1 && 
         (Math.random() < .92)){
            return true;
         }
    else{
-        return false
+        return false;
    }
+  }
   
   public void lowerHP(Pokemon target, int attack){
-   if (this.canHit()){
+   if(this.canHit(target)){
        target.addHealth(attack * -1);
    }
   }
   
   public void lowerEvasion(Pokemon target, int a){
-    if (this.canHit()){
+    if (this.canHit(target)){
       target.addAgility(a* -1);
     }
   }
+}
   
   
   

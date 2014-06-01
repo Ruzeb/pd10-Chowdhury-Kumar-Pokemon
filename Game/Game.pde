@@ -13,6 +13,7 @@ PImage leftMap;
 PImage currentLeftMap;
 PImage rightMap;
 PImage currentRightMap;
+
 PImage gold;
 PImage right;
 PImage left;
@@ -24,6 +25,7 @@ PImage walkingdownRight;
 PImage up;
 PImage walkingupLeft;
 PImage walkingupRight;
+
 int xpos = 0;
 int ypos = 0;
 int shiftLeft = 0;
