@@ -8,7 +8,42 @@ boolean shiftingLeft = false;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
 
 boolean traveling = true;
+boolean startBattle;
+boolean startText;
+boolean movingPlayer;
+boolean openPokemon;
+boolean mainMenu;
+boolean attackMenu;
+boolean endBattle;
 
+//battle variables
+PImage bar;
+PImage enemyBar;
+PImage pokeFS;
+
+PImage arrow;
+PImage downArrow;
+int arrXPos = 288;
+int arrYPos = 432;
+
+PImage stage1;
+PImage stage2;
+PImage stage3;
+
+PFont f;
+PImage battleBox;
+PImage textBox;
+PImage attackBox;
+int trainerXPos;
+int trainerYPos = 196;
+int enemyPos = -96;
+int count;
+
+Pokemon charizard;
+Pokemon enemy;
+PImage enemyFront;
+
+//end here!
 Map current;
 PImage map;
 PImage currentMap;
@@ -18,6 +53,7 @@ PImage rightMap;
 PImage currentRightMap;
 
 PImage gold;
+PImage goldBack;
 PImage right;
 PImage left;
 PImage walkingright;
@@ -41,7 +77,8 @@ MapLoader maps;
 //maybe we can use tiled for this?
 
 void setup(){
-  size(640,576);      
+  size(640,576); 
+  noStroke();  
   
   maps = new MapLoader();
   current = maps.getNewBark();
@@ -58,6 +95,7 @@ void setup(){
   
   PImage hero = loadImage("Gold.png");
   //loading all of the models 
+  goldBack = loadImage("GoldBack.png");
   right = hero.get(0,8,32,32);
   walkingright = hero.get(28,8,32,32);
   left = hero.get(56,8,32,32);
@@ -70,6 +108,7 @@ void setup(){
   walkingupRight = hero.get(274,8,32,32);
   
   //cleaning up each image
+  goldBack = cleanUpImage2(goldBack);
   right = cleanUpImage(right);
   walkingright = cleanUpImage(walkingright);
   left = cleanUpImage(left);
@@ -82,15 +121,42 @@ void setup(){
   walkingupRight = cleanUpImage(walkingupRight);
   gold = up;
   
+  //loading battle screen stuff
+  f = createFont("Arial",16,true);
+  textFont(f,36);
+  stage1 = loadImage("PokeStage1.png");
+  stage2 = loadImage("PokeStage2.png");
+  stage3 = loadImage("PokeStage3.png");
+  stage1 = cleanUpImage2(stage1);
+  stage2 = cleanUpImage2(stage2);
+  stage3 = cleanUpImage2(stage3);
+  trainerXPos = width;
+  
+  battleBox = loadImage("BattleBox.png");
+  battleBox = battleBox.get(0,0,battleBox.width - 10,battleBox.height);
+  textBox = loadImage("TextBox.png");
+  attackBox = loadImage("AttackBox.png");
+  arrow = loadImage("Arrow.png");
+  downArrow = loadImage("DownArrow.png");
+  bar = loadImage("PokemonBar.png");
+  bar = cleanUpImage2(bar);
+  enemyBar = loadImage("EnemyBar.png");
+  enemyBar = cleanUpImage2(enemyBar);
+  
+  //creating a pokemon for testing
+  charizard = new Pokemon(100,"Charizard");
+  charizard.setLevel(36);
+  charizard.setBack(loadImage("Charizard.png"));
+  
   image(gold,256,256);
  //image(enemy1.getFront(), xpos+32, ypos);
 }
 
-//grass color is -16777066
-void draw(){    
+void draw(){ 
+  if(!traveling){
+    println("HELLO!");
+  } 
   if(traveling){
-    //loadPixels();
-    //println("X: " + xpos + ", Y: " + ypos);
     
     setNewMap();
     loadBorders();
@@ -103,14 +169,157 @@ void draw(){
     image(gold,256,256);
     walkingAnimation();
   }
+  if(startBattle){
+    fill(255);
+    noTint();
+    rect(0,0,width,height);
+    image(textBox,0,height-textBox.height);
+    tint(100);
+    image(enemyFront,enemyPos,2);
+    rect(enemyPos-2,0,15,230);
+    rect(enemyPos-2,0,224,10);
+    rect(enemyPos+210,0,15,230);
+    image(goldBack,trainerXPos,trainerYPos);
+    if(trainerXPos > 36){
+      trainerXPos = trainerXPos - 8;
+    }else{
+      startBattle = false;
+      startText = true;
+    }
+    if(enemyPos < 416){
+      enemyPos = enemyPos + 8;
+    }
+  }
+  if(startText){
+    noTint();
+    fill(255);
+    rect(0,0,width,height);
+    image(textBox,0,height-textBox.height);
+    image(enemyFront,enemyPos,2);
+    rect(enemyPos-2,0,15,230);
+    rect(enemyPos-2,0,224,10);
+    rect(enemyPos+210,0,15,230);
+    image(goldBack,trainerXPos,196);
+    fill(0);  
+    text("Wild " + enemy.getName() + " appeared!",36,462);
+    //image(downArrow,548,532);
+    drawDownArrow();
+  }
+  if(movingPlayer){
+    fill(255);
+    rect(0,0,width,height);
+    image(textBox,0,height-textBox.height);
+    image(enemyFront,enemyPos,2);
+    rect(enemyPos-2,0,15,230);
+    rect(enemyPos-2,0,224,10);
+    rect(enemyPos+210,0,15,230);
+    image(goldBack,trainerXPos,trainerYPos);
+    trainerXPos = trainerXPos - 16;
+    if(trainerXPos <= -211){
+      count = 0;
+      movingPlayer = false;
+      openPokemon = true;
+    }
+  }
+  if(openPokemon){
+    fill(255);
+    rect(0,0,width,height);
+    image(textBox,0,height-textBox.height);
+    image(enemyFront,enemyPos,2);
+    rect(enemyPos-2,0,15,230);
+    rect(enemyPos-2,0,224,10);
+    rect(enemyPos+210,0,15,230);
+    fill(0);  
+    openUp();
+  }
+  if(mainMenu){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(battleBox,0,height-battleBox.height);
+    image(arrow,arrXPos,arrYPos);
+    image(charizard.getBack(), 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    fill(#47C448);
+    rect(108,92,192,10);
+    rect(416,304,192,10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(charizard.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(charizard.getName(),348,256);
+    text(charizard.getHealth()+"",394,356);
+    text(charizard.getHealth()+"",512,356);
+  }
+  if(attackMenu){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(attackBox,0,height-attackBox.height);
+    image(charizard.getBack(), 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    fill(#47C448);
+    rect(108,92,192,10);
+    rect(416,304,192,10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(charizard.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(charizard.getName(),348,256);
+    text(charizard.getHealth()+"",394,356);
+    text(charizard.getHealth()+"",512,356);
+    image(arrow,arrXPos,arrYPos);
+  }
 }
 
 //this is used to move the character
 
 void keyPressed(){
   if(key == CODED){
+   if(keyCode == UP){
+     if(mainMenu){
+       arrYPos = 432;
+     }
+     if(attackMenu){
+       if(arrYPos > 419){
+         arrYPos = arrYPos - 30;
+       } 
+     }
+   }
+   if(keyCode == RIGHT){
+     if(mainMenu){
+       arrXPos = 484;
+     }
+   }
+   if(keyCode == LEFT){
+     if(mainMenu){
+       arrXPos = 288;
+     }
+   }   
+   if(keyCode == DOWN){
+     if(mainMenu){
+       arrYPos = 494;
+     }
+     if(attackMenu){
+       if(arrYPos < 509){
+         arrYPos = arrYPos + 30;
+       } 
+     }
+   }
     //working over here
-    if(keyCode == DOWN && !(walking)){
+    if(keyCode == DOWN && !(walking) && traveling){
       if((gold == down || gold == walkingdownRight || gold == walkingdownLeft) && current.checkValid(xpos+272,ypos+304)){
         movingDown = true;
         walking = true;
@@ -119,7 +328,7 @@ void keyPressed(){
         gold = down;
       }
     }
-    if(keyCode == UP && !(walking)){
+    if(keyCode == UP && !(walking) && traveling){
       if((gold == up || gold == walkingupRight || gold == walkingupLeft) && current.checkValid(xpos+272,ypos+240)){
         movingUp = true;
         walking = true;
@@ -128,7 +337,7 @@ void keyPressed(){
         gold = up;
       }      
     }
-    if(keyCode == RIGHT && !(walking)){
+    if(keyCode == RIGHT && !(walking) && traveling){
       if((gold == right || gold == walkingright) && current.checkValid(xpos+304,ypos+272)){
         movingRight = true;
         walking = true;
@@ -137,7 +346,7 @@ void keyPressed(){
         gold = right;
       }      
     }
-    if(keyCode == LEFT && !(walking)){
+    if(keyCode == LEFT && !(walking) && traveling){
       if((gold == left || gold == walkingleft) && current.checkValid(xpos+240,ypos+272)){
         movingLeft = true;
         walking = true;
@@ -145,8 +354,33 @@ void keyPressed(){
       }else{
         gold = left;
       }
-    }     
+    }    
   }
+  if(key == 'x'){
+   if(startText){
+      //println("Goodbye");
+      startText = false;
+      movingPlayer = true;
+   } 
+   if(mainMenu && arrXPos == 288 && arrYPos == 432){
+     mainMenu = false;
+     attackMenu = true;
+     arrXPos = 156;
+     arrYPos = 419;
+   }
+   if(mainMenu && arrXPos == 484 && arrYPos == 494){
+     traveling = true;
+     mainMenu = false;
+   }   
+ }
+ if(key == 'z'){
+   if(attackMenu){
+     attackMenu = false;
+     mainMenu = true;
+     arrXPos = 288;
+     arrYPos = 432;
+   } 
+ }
 }
 
 void walkingAnimation(){
@@ -161,8 +395,15 @@ void walkingAnimation(){
       movingRight = false;
       walking = false;
       gold = right;
-      if(checkBattle(xpos,ypos)){
+      if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
+        startBattle = true;
+        enemy = current.getRandPokemon();
+        enemyFront = enemy.getFront();
+        enemyFront = cleanUpImage2(enemyFront);
+        trainerXPos = width;
+        trainerYPos = 196;
+        enemyPos = -96;
       }
     }
   }
@@ -179,8 +420,15 @@ void walkingAnimation(){
       movingLeft = false;
       walking = false;
       gold = left;
-      if(checkBattle(xpos,ypos)){
+      if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
+        startBattle = true;
+        enemy = current.getRandPokemon();
+        enemyFront = enemy.getFront();
+        enemyFront = cleanUpImage2(enemyFront);
+        trainerXPos = width;
+        trainerYPos = 196;
+        enemyPos = -96;
       }
     }
   }  
@@ -197,8 +445,15 @@ void walkingAnimation(){
      movingUp = false;
      walking = false;
      gold = up;
-     if(checkBattle(xpos,ypos)){
+     if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
+        startBattle = true;
+        enemy = current.getRandPokemon();
+        enemyFront = enemy.getFront();
+        enemyFront = cleanUpImage2(enemyFront);
+        trainerXPos = width;
+        trainerYPos = 196;
+        enemyPos = -96;
      }
    }
   }
@@ -215,8 +470,15 @@ void walkingAnimation(){
      movingDown = false;
      walking = false;
      gold = down;
-     if(checkBattle(xpos,ypos)){
+     if(current.checkBattle(xpos+272,ypos+272)){
         traveling = false; 
+        startBattle = true;
+        enemy = current.getRandPokemon();
+        enemyFront = enemy.getFront();
+        enemyFront = cleanUpImage2(enemyFront);
+        trainerXPos = width;
+        trainerYPos = 196;
+        enemyPos = -96;
      }
    }
   }
@@ -301,6 +563,38 @@ void setNewMap(){
   } 
 }
 
+void drawDownArrow(){
+  if(count < 30){
+   image(downArrow, 548,532);
+  }
+  count++;
+  if(count == 60){
+   count = 0;
+  }  
+}
+
+void openUp(){
+  if(count == 30){
+    openPokemon = false;
+    mainMenu = true;
+    arrXPos = 288;
+    arrYPos = 432;
+    
+  }
+  if(count > 20){
+    image(stage1,54,234);
+  }else{
+    if(count > 10){
+      image(stage3,90,265);
+    }else{
+      if(count > 0){
+        image(stage3,98,255); 
+      }      
+    }
+  }  
+  count++;
+}
+
 PImage cleanUpImage(PImage p){
  PImage newImg = createImage(p.width,p.height,ARGB);
  newImg.loadPixels();
@@ -331,6 +625,43 @@ PImage cleanUpImage(PImage p){
     }
   }
   
+  newImg.updatePixels();
+  return newImg; 
+}
+
+PImage cleanUpImage2(PImage p){
+ PImage newImg = createImage(p.width,p.height,ARGB);
+ newImg.loadPixels();
+ p.loadPixels();
+ color white = p.get(10,10);
+ color white2 = p.get(4,4);
+ color white3 = p.get(3,3);
+ color white4 = p.get(9,9);
+ color white5 = p.get(2,2);
+  //make it transparent
+  for(int x = 0; x < p.width; x ++){
+    for(int y = 0; y < p.height; y ++){
+      color g = p.pixels[x + y * p.width];
+      if(g == white || g == white2 || g == white3 || g == white4 || g == white5){
+        //println("hello");
+        p.pixels[x + y * p.width] = color(255);
+      }
+    }
+  }
+  //newImg.updatePixels();
+  
+  for(int x = 0; x < p.width; x ++){ 
+    for(int y = 0; y < p.height; y ++){
+      color g = p.pixels[x + y * p.width];
+      if(g == color(255)){
+        newImg.pixels[x + y * p.width] = color(0,0,0,0);
+      }else{
+        newImg.pixels[x + y * p.width] = p.pixels[x + y * p.width];
+      }
+    }
+  }
+  
+  p.updatePixels();
   newImg.updatePixels();
   return newImg; 
 }

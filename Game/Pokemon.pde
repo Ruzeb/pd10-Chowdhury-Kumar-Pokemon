@@ -22,8 +22,9 @@ public class Pokemon{
   }
   
   //this constructor is just being used for testing purposes
-  public Pokemon(){
-    
+  public Pokemon(int h,String n){
+    health = h;
+    name = n;
   }
   
   public void setLevel(int i){
