@@ -1,6 +1,6 @@
 public class Trainer{
   
-  private ArrayList<Pokemon> pokemon;
+  private ArrayList<Pokemon> pokemon = new ArrayList<Pokemon>();
   private PImage battleFront;
   private PImage mapFront;
   private PImage mapBack;
@@ -9,9 +9,9 @@ public class Trainer{
   private int locY;
   private String textBox = "";
   
-  public void Trainer(String n, ArrayList<Pokemon> p, int x, int y){
+  public Trainer(String n, int x, int y){
     this.name = n;
-    this.pokemon = p;
+    
     this.locX = x;
     this.locY = y;
   }
@@ -37,5 +37,12 @@ public class Trainer{
     this.textBox = text;
   }
   
+  public void setFront(PImage p){
+    this.mapFront = p;
+  }
+  
+  public PImage getFront(){
+    return this.mapFront;
+  }
 }
   

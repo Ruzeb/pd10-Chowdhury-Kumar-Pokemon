@@ -26,7 +26,7 @@ PImage walkingdownRight;
 PImage up;
 PImage walkingupLeft;
 PImage walkingupRight;
-Trainer player;
+Trainer enemy1;
 
 int xpos = 0;
 int ypos = 0;
@@ -48,6 +48,11 @@ void setup(){
   ypos = 32;
   currentMap = map.get(xpos,ypos,width,width);
   image(currentMap,0,0);
+  
+  
+  enemy1 = new Trainer("Valkyrie", xpos+32, ypos); 
+  PImage trainer = loadImage("trainers.jpg");
+  enemy1.setFront(trainer.get(49,94,32,32));
   
   PImage hero = loadImage("Gold.png");
   //loading all of the models 
@@ -76,6 +81,7 @@ void setup(){
   gold = up;
   
   image(gold,256,256);
+ //image(enemy1.getFront(), xpos+32, ypos);
 }
 
 //the map now moves as it should instead of gold!!!
@@ -91,7 +97,7 @@ void draw(){
   image(currentMap,0,0);
   imageMode(CORNER);
   image(gold,256,256);
-  
+  //image(enemy1.getFront(), xpos+32, ypos);
   walkingAnimation();
 }
 

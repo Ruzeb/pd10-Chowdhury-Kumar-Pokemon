@@ -30,7 +30,7 @@ public class Pokemon{
     level = i;
   }
   
-  public int returnLevel(){
+  public int getLevel(){
     return level; 
   }
   
@@ -86,7 +86,7 @@ public class Pokemon{
     this.setAttack(this.getAttack() + h);
   }
   
-  /*
+  
   public int getDefense(){
     return this.defense;
   }
@@ -96,9 +96,9 @@ public class Pokemon{
   }
   
   public void addDefense(int h){
-    this.setDefense(this.getDefense + h);
+    this.setDefense(this.getDefense() + h);
   }
-  */
+  
   public int getAccuracy(){
     return this.accuracy;
   }

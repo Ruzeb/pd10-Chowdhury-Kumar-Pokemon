@@ -12,7 +12,7 @@ public class Moves{
     this.name = s;
     this.accuracy = a;
     this.power = p;
-    this.user = user;
+    this.user = u;
     this.times = t;
   }
   
@@ -30,9 +30,17 @@ public class Moves{
    }
   }
   
+  public int evaluateDamage(Pokemon target, int attack){
+    int damage = 0;
+    damage = ((((this.user.getLevel() *2)+10)/250)* 
+      (this.user.getAttack() / this.user.getDefense())*
+      (this.getPower() + 2));
+     return damage;
+  }
+  
   public void lowerHP(Pokemon target, int attack){
    if(this.canHit(target)){
-       target.addHealth(attack * -1);
+       target.addHealth(this.evaluateDamage(target, attack));
    }
   }
   
@@ -40,6 +48,10 @@ public class Moves{
     if (this.canHit(target)){
       target.addAgility(a* -1);
     }
+  }
+  
+  public int getPower(){
+    return this.power;
   }
 }
   
