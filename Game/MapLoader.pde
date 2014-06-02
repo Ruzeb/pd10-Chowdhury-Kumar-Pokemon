@@ -1,7 +1,6 @@
 public class MapLoader{
  Map[] maps;
  public MapLoader(){
-  PImage pokeFS = loadImage("PokemonFrontSprites.png"); 
    
   maps = new Map[4];
   maps[0] = new Map("FuschiaTown");
@@ -19,9 +18,10 @@ public class MapLoader{
   maps[3].setMapCollisions(loadImage("Route29Coll.png").get(0,0,1920,576));
   ArrayList<Moves> m = new ArrayList<Moves>();
   Pokemon chikorita = new Pokemon(100,100,100,100,100,"Chikorita",m);
-  chikorita.setFront(pokeFS.get(32,96,224,224));
-  chikorita.setLevel(10);
+  Pokemon tododile = new Pokemon(100,"Tododile");
+  //chikorita.setLevel(10);
   maps[3].addPokemon(chikorita);
+  maps[3].addPokemon(tododile);
   
   //Setting wests,norths,souths
   maps[2].setWestMap(maps[3]);

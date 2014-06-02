@@ -19,12 +19,16 @@ public class Pokemon{
     this.accuracy = acc;
     this.name = n;
     this.moves = m;
+    back = loadImage(name + "Back.png");
+    front = loadImage(name + "Front.png");
   }
   
   //this constructor is just being used for testing purposes
   public Pokemon(int h,String n){
     health = h;
     name = n;
+    back = loadImage(name + "Back.png");
+    front = loadImage(name + "Front.png");
   }
   
   public void setLevel(int i){

@@ -90,7 +90,9 @@ public class Map{
  public Pokemon getRandPokemon(){
     Random r = new Random();
     int i = r.nextInt(pokeList.size());
-    return pokeList.get(i);
+    Pokemon result = pokeList.get(i);
+    result.setLevel(r.nextInt(5)+1);
+    return result;
  }
  
  public boolean checkValid(int x,int y){

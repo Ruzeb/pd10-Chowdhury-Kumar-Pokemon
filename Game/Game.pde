@@ -15,6 +15,8 @@ boolean movingPlayer;
 boolean openPokemon;
 boolean mainMenu;
 boolean attackMenu;
+boolean playerAttacking;
+boolean battleText;
 boolean endBattle;
 
 //battle variables
@@ -35,6 +37,7 @@ PFont f;
 PImage battleBox;
 PImage textBox;
 PImage attackBox;
+PImage attack;
 int trainerXPos;
 int trainerYPos = 196;
 int enemyPos = -96;
@@ -143,20 +146,19 @@ void setup(){
   bar = cleanUpImage2(bar);
   enemyBar = loadImage("EnemyBar.png");
   enemyBar = cleanUpImage2(enemyBar);
+  attack = loadImage("Tackle.png");
+  attack = cleanUpImage2(attack);
   
   //creating a pokemon for testing
   charizard = new Pokemon(100,"Charizard");
   charizard.setLevel(36);
-  charizard.setBack(loadImage("Charizard.png"));
+  //charizard.setBack(loadImage("CharizardBack.png"));
   
   image(gold,256,256);
  //image(enemy1.getFront(), xpos+32, ypos);
 }
 
 void draw(){ 
-  if(!traveling){
-    println("HELLO!");
-  } 
   if(traveling){
     
     setNewMap();
@@ -286,6 +288,12 @@ void draw(){
     text(charizard.getHealth()+"",512,356);
     image(arrow,arrXPos,arrYPos);
   }
+  if(playerAttacking){    
+    tackle();
+  }
+  if(battleText){
+     
+  }
 }
 
 //this is used to move the character
@@ -366,6 +374,10 @@ void keyPressed(){
       startText = false;
       movingPlayer = true;
    } 
+   if(attackMenu && arrXPos == 156){
+     attackMenu = false;
+     playerAttacking = true;
+   } 
    if(mainMenu && arrXPos == 288 && arrYPos == 432){
      mainMenu = false;
      attackMenu = true;
@@ -375,7 +387,7 @@ void keyPressed(){
    if(mainMenu && arrXPos == 484 && arrYPos == 494){
      traveling = true;
      mainMenu = false;
-   }   
+   }  
  }
  if(key == 'z'){
    if(attackMenu){
@@ -613,6 +625,7 @@ void openUp(){
     mainMenu = true;
     arrXPos = 288;
     arrYPos = 432;
+    count = 0;
     
   }
   if(count > 20){
@@ -628,6 +641,44 @@ void openUp(){
   }  
   count++;
 }
+
+void tackle(){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(textBox,0,height-textBox.height);
+    image(charizard.getBack(), 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    fill(#47C448);
+    rect(108,92,192,10);
+    rect(416,304,192,10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(charizard.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(charizard.getName(),348,256);
+    text(charizard.getHealth()+"",394,356);
+    text(charizard.getHealth()+"",512,356);
+    text(charizard.getName() + " used tackle!", 36, 462);
+    if(count > 10 && count < 30){
+      image(attack,444,92);  
+    }
+    count++;
+    if(count == 60){
+      playerAttacking = false;
+      count = 0;
+      mainMenu = true; 
+      arrXPos = 288;
+      arrYPos = 432;
+    }
+}
+
 
 PImage cleanUpImage(PImage p){
  PImage newImg = createImage(p.width,p.height,ARGB);
