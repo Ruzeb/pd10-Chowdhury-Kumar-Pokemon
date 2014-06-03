@@ -1,5 +1,6 @@
 public class MapLoader{
  Map[] maps;
+ MovesLoader moves = new MovesLoader();
  public MapLoader(){
    
   maps = new Map[4];
@@ -19,9 +20,14 @@ public class MapLoader{
   //ArrayList<Moves> m = new ArrayList<Moves>();
   Pokemon chikorita = new Pokemon("Chikorita",45,65,49,45);
   Pokemon tododile = new Pokemon("Tododile",50,64,65,43);
+  Pokemon cyndaquil = new Pokemon("Cyndaquil",39,43,52,65);
+  chikorita.addMove(moves.getTackle());
+  tododile.addMove(moves.getTackle());
+  cyndaquil.addMove(moves.getTackle());
   //chikorita.setLevel(10);
   maps[3].addPokemon(chikorita);
   maps[3].addPokemon(tododile);
+  maps[3].addPokemon(cyndaquil);
   
   //Setting wests,norths,souths
   maps[2].setWestMap(maps[3]);

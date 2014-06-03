@@ -66,6 +66,11 @@ public class Pokemon{
     return moves.get(i); 
   }
   
+  public Moves getRandomMove(){
+    Random r = new Random();
+    return getMoves(r.nextInt(moves.size())); 
+  }
+  
   public void setLevel(int i){
     level = i;
     setMaxHealth();
@@ -109,8 +114,24 @@ public class Pokemon{
     return (int)d; 
   }
   
+  public void getHealthBarColor(){
+    if(getHealthBar() >= (192/2)){
+      fill(#47C448); 
+    }
+    if(getHealthBar() <  39){
+      fill(#FA171B);
+    }
+    if(getHealthBar() > 39 && getHealthBar() < (192/2)){
+      fill(#FFD117); 
+    } 
+  }
+  
   public int getHealth(){
     return this.health;
+  }
+  
+  public int getMaxHealth(){
+    return maxHealth; 
   }
   
   public void setHealth(int h){
@@ -128,35 +149,15 @@ public class Pokemon{
     return this.speed;
   }
   
-  /*
-  public void setspeed(int s){
-    this.speed = s;
-  }
-  */
-  
   public void setSpeed(){
     speed = (((IV + baseSpeed) * level)/50)+5;
     println(name + " has " + speed + " speed!");
   }
-  /*
-  public void addSpeed(int h){
-    this.setSpeed(this.getSpeed() + h);
-  }
-  */
   
   public int getAttack(){
     return this.attack;
   }
   
-  /*
-  public void setAttack(int s){
-    this.attack = s;
-  }
-  
-  public void addAttack(int h){
-    this.setAttack(this.getAttack() + h);
-  }
-  */
   public void setAttack(){
     attack = (((IV + baseAttack) * level)/50)+5;
   }
@@ -166,15 +167,6 @@ public class Pokemon{
     return this.defense;
   }
   
-  /*
-  public void setDefense(int s){
-    this.defense = s;
-  }
-  
-  public void addDefense(int h){
-    this.setDefense(this.getDefense() + h);
-  }
-  */
   public void setDefense(){
    defense = (((IV + baseDefense) * level)/50)+5;
   }

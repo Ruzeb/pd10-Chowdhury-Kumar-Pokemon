@@ -17,6 +17,7 @@ boolean openPokemon;
 boolean mainMenu;
 boolean attackMenu;
 boolean playerAttacking;
+boolean enemyAttacking;
 boolean battleText;
 boolean endBattle;
 
@@ -273,8 +274,9 @@ void draw(){
     rect(414,0,224,10);
     rect(337,1,10,150);
     rect(312,216,10,170);
-    fill(#47C448);
+    enemy.getHealthBarColor();
     rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
@@ -282,7 +284,7 @@ void draw(){
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
     text(friendly.getHealth()+"",394,356);
-    text(friendly.getHealth()+"",512,356);
+    text(friendly.getMaxHealth()+"",512,356);
   }
   if(attackMenu){
     fill(255);
@@ -297,8 +299,10 @@ void draw(){
     rect(414,0,224,10);
     rect(337,1,10,150);
     rect(312,216,10,170);
-    fill(#47C448);
+    //fill(#47C448);
+    enemy.getHealthBarColor();
     rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
@@ -306,7 +310,7 @@ void draw(){
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
     text(friendly.getHealth()+"",394,356);
-    text(friendly.getHealth()+"",512,356);
+    text(friendly.getMaxHealth()+"",512,356);
     text(friendly.getMoves(0).toString(),196,454);
     image(arrow,arrXPos,arrYPos);
   }
@@ -323,8 +327,10 @@ void draw(){
     rect(414,0,224,10);
     rect(337,1,10,150);
     rect(312,216,10,170);
-    fill(#47C448);
+    //fill(#47C448);
+    enemy.getHealthBarColor();
     rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
@@ -332,13 +338,50 @@ void draw(){
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
     text(friendly.getHealth()+"",394,356);
-    text(friendly.getHealth()+"",512,356);
+    text(friendly.getMaxHealth()+"",512,356);
     text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
     if(!friendlyAttack.animate(count)){
       count ++;
     }else{
       friendlyAttack.lowerHP(enemy);
       playerAttacking = false;
+      count = 0;
+      mainMenu = true;
+      arrXPos = 288;
+      arrYPos = 432;
+    }
+  }
+  if(enemyAttacking){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(textBox,0,height-textBox.height);
+    image(friendlyBack, 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    //fill(#47C448);
+    enemy.getHealthBarColor();
+    rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
+    rect(416,304,friendly.getHealthBar(),10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(friendly.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getMaxHealth()+"",512,356);
+    text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
+    if(!enemyAttack.animate(count)){
+      count ++;
+    }else{
+      enemyAttack.lowerHP(friendly);
+      enemyAttacking = false;
       count = 0;
       mainMenu = true;
       arrXPos = 288;
@@ -473,8 +516,13 @@ void keyPressed(){
    } 
    if(attackMenu && arrXPos == 156){
      friendlyAttack = friendly.getMoves(0);
+     enemyAttack = enemy.getRandomMove();
      attackMenu = false;
-     playerAttacking = true;
+     if(friendly.getSpeed() < enemy.getSpeed()){
+       enemyAttacking = true;
+     }else{
+       playerAttacking = true; 
+     }
    } 
    if(mainMenu && arrXPos == 288 && arrYPos == 432){
      mainMenu = false;
