@@ -16,6 +16,10 @@ public class Trainer{
     this.locY = y;
   }
   
+  public void addPokemon(Pokemon p){
+    pokemon.add(p); 
+  }
+  
   public String getLocation(){
     return "( " + locX + " , " + locY + " )";
   }

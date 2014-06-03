@@ -7,7 +7,8 @@ boolean shiftingRight = false;
 boolean shiftingLeft = false;
 int currentStep;     //this will probably be used to see when the character needs to stop moving in each step
 
-boolean traveling = true;
+boolean startGame = true;
+boolean traveling;
 boolean loadBattle;
 boolean startBattle;
 boolean startText;
@@ -26,8 +27,8 @@ PImage pokeFS;
 
 PImage arrow;
 PImage downArrow;
-int arrXPos = 288;
-int arrYPos = 432;
+int arrXPos = 80;
+int arrYPos = 336;
 
 PImage stage1;
 PImage stage2;
@@ -43,8 +44,9 @@ int trainerYPos = 196;
 int enemyPos = -96;
 int count;
 
-Pokemon charizard;
+Pokemon friendly;
 Pokemon enemy;
+PImage  friendlyBack;
 PImage enemyFront;
 
 //end here!
@@ -68,6 +70,7 @@ PImage walkingdownRight;
 PImage up;
 PImage walkingupLeft;
 PImage walkingupRight;
+Trainer player;
 Trainer enemy1;
 
 int xpos = 0;
@@ -83,12 +86,12 @@ MapLoader maps;
 void setup(){
   size(640,576); 
   noStroke();  
-  
+  frameRate(80);
   maps = new MapLoader();
   current = maps.getNewBark();
   map = current.getMap();
-  xpos = -256;
-  ypos = 32;
+  xpos = 0;
+  ypos = -128;
   currentMap = map.get(xpos,ypos,width,width);
   image(currentMap,0,0);
   
@@ -97,6 +100,8 @@ void setup(){
   PImage trainer = loadImage("trainers.jpg");
   enemy1.setFront(trainer.get(49,94,32,32));
   
+  
+  player = new Trainer("Gold", 256,256);
   PImage hero = loadImage("Gold.png");
   //loading all of the models 
   goldBack = loadImage("GoldBack.png");
@@ -123,7 +128,7 @@ void setup(){
   up = cleanUpImage(up);
   walkingupLeft = cleanUpImage(walkingupLeft);
   walkingupRight = cleanUpImage(walkingupRight);
-  gold = up;
+  gold = down;
   
   //loading battle screen stuff
   f = createFont("Arial",16,true);
@@ -149,16 +154,28 @@ void setup(){
   attack = loadImage("Tackle.png");
   attack = cleanUpImage2(attack);
   
-  //creating a pokemon for testing
-  charizard = new Pokemon(100,"Charizard");
-  charizard.setLevel(36);
-  //charizard.setBack(loadImage("CharizardBack.png"));
+
   
   image(gold,256,256);
  //image(enemy1.getFront(), xpos+32, ypos);
 }
 
 void draw(){ 
+  //(80,336)
+  //(286,336);
+  //(484,336);
+  if(startGame){
+    fill(255);
+    rect(0,0,width,height);
+    image(downArrow,arrXPos,arrYPos);
+    image(loadImage("TododileFront.png"),-2,90);
+    image(loadImage("ChikoritaFront.png"),195,86);
+    image(loadImage("CyndaquilFront.png"),392,83);
+    fill(0);
+    text("CHOOSE YOUR STARTER!",83,76);
+    //println(mouseX + ", " + mouseY); 
+  }
+  
   if(traveling){
     
     setNewMap();
@@ -244,7 +261,7 @@ void draw(){
     //image(battleBox,0,height-battleBox.height);
     image(battleBox,0,height-battleBox.height);
     image(arrow,arrXPos,arrYPos);
-    image(charizard.getBack(), 36, 196);
+    image(friendlyBack, 36, 196);
     image(enemyFront,416,2);
     image(bar,316,224);
     image(enemyBar,6,6);
@@ -257,18 +274,18 @@ void draw(){
     rect(416,304,192,10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
-    text(charizard.getLevel()+"",522,292);
+    text(friendly.getLevel()+"",522,292);
     text(enemy.getName(),12,46);
-    text(charizard.getName(),348,256);
-    text(charizard.getHealth()+"",394,356);
-    text(charizard.getHealth()+"",512,356);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getHealth()+"",512,356);
   }
   if(attackMenu){
     fill(255);
     rect(0,0,width,height);
     //image(battleBox,0,height-battleBox.height);
     image(attackBox,0,height-attackBox.height);
-    image(charizard.getBack(), 36, 196);
+    image(friendlyBack, 36, 196);
     image(enemyFront,416,2);
     image(bar,316,224);
     image(enemyBar,6,6);
@@ -281,11 +298,11 @@ void draw(){
     rect(416,304,192,10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
-    text(charizard.getLevel()+"",522,292);
+    text(friendly.getLevel()+"",522,292);
     text(enemy.getName(),12,46);
-    text(charizard.getName(),348,256);
-    text(charizard.getHealth()+"",394,356);
-    text(charizard.getHealth()+"",512,356);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getHealth()+"",512,356);
     image(arrow,arrXPos,arrYPos);
   }
   if(playerAttacking){    
@@ -297,7 +314,8 @@ void draw(){
 }
 
 //this is used to move the character
-
+//286,484
+//336 y
 void keyPressed(){
   if(key == CODED){
    if(keyCode == UP){
@@ -311,11 +329,27 @@ void keyPressed(){
      }
    }
    if(keyCode == RIGHT){
+     if(startGame){
+       if(arrXPos == 286){
+        arrXPos = 484; 
+       }
+       if(arrXPos == 80){
+        arrXPos = 286;
+       } 
+     }
      if(mainMenu){
        arrXPos = 484;
      }
    }
    if(keyCode == LEFT){
+     if(startGame){
+       if(arrXPos == 286){
+        arrXPos = 80;
+       }
+       if(arrXPos == 484){
+        arrXPos = 286;
+       } 
+     }
      if(mainMenu){
        arrXPos = 288;
      }
@@ -369,6 +403,26 @@ void keyPressed(){
     }    
   }
   if(key == 'x'){
+   if(startGame){
+     if(arrXPos == 80){
+       Pokemon tododile = new Pokemon(100,"Tododile");
+       player.addPokemon(tododile); 
+       startGame = false;
+       traveling = true;
+     }
+     if(arrXPos == 286){
+       Pokemon chikorita = new Pokemon(100,"Chikorita");
+       player.addPokemon(chikorita);
+       startGame = false;
+       traveling = true;
+     }  
+     if(arrXPos == 484){
+       Pokemon cyndaquil = new Pokemon(100,"Cyndaquil");
+       player.addPokemon(cyndaquil);
+       startGame = false;
+       traveling = true;
+     }
+   }
    if(startText){
       //println("Goodbye");
       startText = false;
@@ -417,6 +471,9 @@ void walkingAnimation(){
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
+        friendly = player.getPokemon().get(0);
+        friendlyBack = friendly.getBack();
+        friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
         enemyPos = -96;
@@ -442,6 +499,9 @@ void walkingAnimation(){
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
+        friendly = player.getPokemon().get(0);
+        friendlyBack = friendly.getBack();
+        friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
         enemyPos = -96;
@@ -467,6 +527,9 @@ void walkingAnimation(){
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
+        friendly = player.getPokemon().get(0);
+        friendlyBack = friendly.getBack();
+        friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
         enemyPos = -96;
@@ -492,6 +555,9 @@ void walkingAnimation(){
         enemy = current.getRandPokemon();
         enemyFront = enemy.getFront();
         enemyFront = cleanUpImage2(enemyFront);
+        friendly = player.getPokemon().get(0);
+        friendlyBack = friendly.getBack();
+        friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
         enemyPos = -96;
@@ -580,18 +646,18 @@ void setNewMap(){
 }
 
 void loadUp(){
-  if(count%30 > 20){
+  if(count%60 > 40){
      tint(100,0,0);
   }else{
-    if(count%30 > 10){
+    if(count%60 > 20){
       noTint(); 
     }else{
-      if(count%30 > 0){
+      if(count%60 > 0){
         tint(100); 
       }
     }
   }
-  if(count == 60){
+  if(count == 120){
     loadBattle = false;
     startBattle = true;
     count = 0;
@@ -647,7 +713,7 @@ void tackle(){
     rect(0,0,width,height);
     //image(battleBox,0,height-battleBox.height);
     image(textBox,0,height-textBox.height);
-    image(charizard.getBack(), 36, 196);
+    image(friendlyBack, 36, 196);
     image(enemyFront,416,2);
     image(bar,316,224);
     image(enemyBar,6,6);
@@ -660,17 +726,17 @@ void tackle(){
     rect(416,304,192,10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
-    text(charizard.getLevel()+"",522,292);
+    text(friendly.getLevel()+"",522,292);
     text(enemy.getName(),12,46);
-    text(charizard.getName(),348,256);
-    text(charizard.getHealth()+"",394,356);
-    text(charizard.getHealth()+"",512,356);
-    text(charizard.getName() + " used tackle!", 36, 462);
-    if(count > 10 && count < 30){
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getHealth()+"",512,356);
+    text(friendly.getName() + " used tackle!", 36, 462);
+    if(count < 20 || (count > 40 && count < 60)){
       image(attack,444,92);  
     }
     count++;
-    if(count == 60){
+    if(count == 80){
       playerAttacking = false;
       count = 0;
       mainMenu = true; 

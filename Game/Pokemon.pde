@@ -1,5 +1,6 @@
 public class Pokemon{
   
+  private int maxHealth;
   private int health;
   private int attack;
   private int defense;
@@ -13,6 +14,7 @@ public class Pokemon{
   
   public Pokemon(int h, int at, int d, int a, int acc,String n, ArrayList<Moves> m){
     this.health = h;
+    this.maxHealth = h;
     this.attack = at;
     this.defense = d;
     this.agility = a;
@@ -26,7 +28,9 @@ public class Pokemon{
   //this constructor is just being used for testing purposes
   public Pokemon(int h,String n){
     health = h;
+    maxHealth = h;
     name = n;
+    level = 1;
     back = loadImage(name + "Back.png");
     front = loadImage(name + "Front.png");
   }
