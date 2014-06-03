@@ -16,9 +16,9 @@ public class MapLoader{
   maps[3] = new Map("Route29");
   maps[3].setMap(loadImage("Route29.png").get(0,0,1920,576));
   maps[3].setMapCollisions(loadImage("Route29Coll.png").get(0,0,1920,576));
-  ArrayList<Moves> m = new ArrayList<Moves>();
-  Pokemon chikorita = new Pokemon(100,100,100,100,100,"Chikorita",m);
-  Pokemon tododile = new Pokemon(100,"Tododile");
+  //ArrayList<Moves> m = new ArrayList<Moves>();
+  Pokemon chikorita = new Pokemon("Chikorita",45,65,49,45);
+  Pokemon tododile = new Pokemon("Tododile",50,64,65,43);
   //chikorita.setLevel(10);
   maps[3].addPokemon(chikorita);
   maps[3].addPokemon(tododile);

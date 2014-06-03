@@ -48,6 +48,8 @@ Pokemon friendly;
 Pokemon enemy;
 PImage  friendlyBack;
 PImage enemyFront;
+Moves friendlyAttack;
+Moves enemyAttack;
 
 //end here!
 Map current;
@@ -78,6 +80,7 @@ int ypos = 0;
 int shiftLeft = 0;
 int shiftRight = 0;
 MapLoader maps;
+MovesLoader moves;
 
 //IMPORTANT! EACH PIXEL IS 32*32
 //we need to come up with better pixel numbers for the character models
@@ -88,6 +91,7 @@ void setup(){
   noStroke();  
   frameRate(80);
   maps = new MapLoader();
+  moves = new MovesLoader();
   current = maps.getNewBark();
   map = current.getMap();
   xpos = 0;
@@ -270,8 +274,8 @@ void draw(){
     rect(337,1,10,150);
     rect(312,216,10,170);
     fill(#47C448);
-    rect(108,92,192,10);
-    rect(416,304,192,10);
+    rect(108,92,enemy.getHealthBar(),10);
+    rect(416,304,friendly.getHealthBar(),10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
     text(friendly.getLevel()+"",522,292);
@@ -294,8 +298,8 @@ void draw(){
     rect(337,1,10,150);
     rect(312,216,10,170);
     fill(#47C448);
-    rect(108,92,192,10);
-    rect(416,304,192,10);
+    rect(108,92,enemy.getHealthBar(),10);
+    rect(416,304,friendly.getHealthBar(),10);
     fill(0);
     text(enemy.getLevel()+"",212,80);
     text(friendly.getLevel()+"",522,292);
@@ -303,10 +307,43 @@ void draw(){
     text(friendly.getName(),348,256);
     text(friendly.getHealth()+"",394,356);
     text(friendly.getHealth()+"",512,356);
+    text(friendly.getMoves(0).toString(),196,454);
     image(arrow,arrXPos,arrYPos);
   }
   if(playerAttacking){    
-    tackle();
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(textBox,0,height-textBox.height);
+    image(friendlyBack, 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    fill(#47C448);
+    rect(108,92,enemy.getHealthBar(),10);
+    rect(416,304,friendly.getHealthBar(),10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(friendly.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getHealth()+"",512,356);
+    text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
+    if(!friendlyAttack.animate(count)){
+      count ++;
+    }else{
+      friendlyAttack.lowerHP(enemy);
+      playerAttacking = false;
+      count = 0;
+      mainMenu = true;
+      arrXPos = 288;
+      arrYPos = 432;
+    }
   }
   if(battleText){
      
@@ -405,19 +442,25 @@ void keyPressed(){
   if(key == 'x'){
    if(startGame){
      if(arrXPos == 80){
-       Pokemon tododile = new Pokemon(100,"Tododile");
+       Pokemon tododile = new Pokemon("Tododile",50,64,65,43);
+       tododile.setLevel(5);
+       tododile.addMove(moves.getTackle());
        player.addPokemon(tododile); 
        startGame = false;
        traveling = true;
      }
      if(arrXPos == 286){
-       Pokemon chikorita = new Pokemon(100,"Chikorita");
+       Pokemon chikorita = new Pokemon("Chikorita",45,65,49,45);
+       chikorita.setLevel(5);
+       chikorita.addMove(moves.getTackle());
        player.addPokemon(chikorita);
        startGame = false;
        traveling = true;
      }  
      if(arrXPos == 484){
-       Pokemon cyndaquil = new Pokemon(100,"Cyndaquil");
+       Pokemon cyndaquil = new Pokemon("Cyndaquil",39,43,52,65);
+       cyndaquil.setLevel(5);
+       cyndaquil.addMove(moves.getTackle());
        player.addPokemon(cyndaquil);
        startGame = false;
        traveling = true;
@@ -429,6 +472,7 @@ void keyPressed(){
       movingPlayer = true;
    } 
    if(attackMenu && arrXPos == 156){
+     friendlyAttack = friendly.getMoves(0);
      attackMenu = false;
      playerAttacking = true;
    } 

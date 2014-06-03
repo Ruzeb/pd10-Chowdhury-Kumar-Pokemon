@@ -9,13 +9,16 @@ public class Moves{
   private Pokemon user;
   private PImage animation;
   
-  public void Moves(String s, int a, int p, Pokemon u, int t){
+  public Moves(String s, int a, int p){
     this.name = s;
     this.accuracy = a;
     this.power = p;
-    this.user = u;
-    this.times = t;
   }
+  
+  public void setUser(Pokemon p){
+    user = p; 
+  }
+  
   
   //accuracy is from 255
   public int getAccuracy(){
@@ -38,7 +41,7 @@ public class Moves{
    }
   }
   */
-  public boolean canHit(Pokemon target){
+  public boolean canHit(){
     Random r = new Random();
     if(r.nextInt(255) <= this.accuracy-1){
       return true;
@@ -47,25 +50,26 @@ public class Moves{
     }
   }
   
-  public int evaluateDamage(Pokemon target, int attack){
+  public int evaluateDamage(Pokemon target){
     int damage = 0;
-    damage = ((((this.user.getLevel() *2)+10)/250)* 
-      (this.user.getAttack() / this.user.getDefense())*
+      damage = ((((this.user.getLevel() *2)+10)/250)* 
+      (this.user.getAttack() / target.getDefense())*
       (this.getPower()) + 2);
      return damage;
   }
   
-  public void lowerHP(Pokemon target, int attack){
-   if(this.canHit(target)){
-       target.addHealth(this.evaluateDamage(target, attack));
+  public void lowerHP(Pokemon target){
+   if(this.canHit()){
+       target.addHealth(this.evaluateDamage(target)*-1);
    }
   }
-  
+  /*
   public void lowerEvasion(Pokemon target, int a){
     if (this.canHit(target)){
-      target.addAgility(a* -1);
+      target.addSpeed(a* -1);
     }
   }
+  */
   
   public int getPower(){
     return this.power;
@@ -89,6 +93,10 @@ public class Moves{
     }else{
       return false;
     }
+  }
+  
+  public String toString(){
+    return name; 
   }
   
 }
