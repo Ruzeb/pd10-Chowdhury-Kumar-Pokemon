@@ -16,10 +16,12 @@ boolean movingPlayer;
 boolean openPokemon;
 boolean mainMenu;
 boolean attackMenu;
-boolean playerAttacking;
+boolean friendlyAttacking;
 boolean enemyAttacking;
+boolean friendlyMiss;
+boolean enemyMiss;
 boolean battleText;
-boolean endBattle;
+boolean enemyDead;
 
 //battle variables
 PImage bar;
@@ -314,7 +316,7 @@ void draw(){
     text(friendly.getMoves(0).toString(),196,454);
     image(arrow,arrXPos,arrYPos);
   }
-  if(playerAttacking){    
+  if(friendlyAttacking){    
     fill(255);
     rect(0,0,width,height);
     //image(battleBox,0,height-battleBox.height);
@@ -340,15 +342,19 @@ void draw(){
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
     text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
-    if(!friendlyAttack.animate(count)){
+    if(!friendlyAttack.animate(count,444,92)){
       count ++;
     }else{
       friendlyAttack.lowerHP(enemy);
-      playerAttacking = false;
+      friendlyAttacking = false;
       count = 0;
-      mainMenu = true;
-      arrXPos = 288;
-      arrYPos = 432;
+      if(friendly.getSpeed() >= enemy.getSpeed()){
+        enemyAttacking = true;
+      }else{
+        mainMenu = true;
+        arrXPos = 288;
+        arrYPos = 432; 
+      }
     }
   }
   if(enemyAttacking){
@@ -377,20 +383,115 @@ void draw(){
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
     text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
-    if(!enemyAttack.animate(count)){
+    if(!enemyAttack.animate(count,64,266)){
       count ++;
     }else{
       enemyAttack.lowerHP(friendly);
       enemyAttacking = false;
       count = 0;
-      mainMenu = true;
-      arrXPos = 288;
-      arrYPos = 432;
+      if(friendly.getSpeed() < enemy.getSpeed()){
+        friendlyAttacking = true;
+      }else{
+        mainMenu = true;
+        arrXPos = 288;
+        arrYPos = 432; 
+      }
     }
   }
-  if(battleText){
-     
+  if(friendlyMiss){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(textBox,0,height-textBox.height);
+    image(friendlyBack, 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    //fill(#47C448);
+    enemy.getHealthBarColor();
+    rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
+    rect(416,304,friendly.getHealthBar(),10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(friendly.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
+    if(count >= 50){
+      text("But it missed!", 36, 494);
+    }
+    if(count == 120){
+      friendlyMiss = false;
+      count = 0;
+      if(friendly.getSpeed() >= enemy.getSpeed()){
+        if(enemyAttack.canHit()){
+           enemyAttacking = true;
+        }else{
+           enemyMiss = true; 
+        }
+      }else{
+        mainMenu = true;
+        arrXPos = 288;
+        arrYPos = 432; 
+      } 
+    }
+    count++;
   }
+  if(enemyMiss){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(textBox,0,height-textBox.height);
+    image(friendlyBack, 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    //fill(#47C448);
+    enemy.getHealthBarColor();
+    rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
+    rect(416,304,friendly.getHealthBar(),10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(friendly.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getMaxHealth()+"",512,356);
+    text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
+    if(count >= 50){
+      text("But it missed!", 36, 494);
+    }
+    if(count == 120){
+      count = 0;
+      enemyMiss = false;
+      if(friendly.getSpeed() < enemy.getSpeed()){
+        if(friendlyAttack.canHit()){
+           friendlyAttacking = true;
+        }else{
+           friendlyMiss = true; 
+        }
+      }else{
+        mainMenu = true;
+        arrXPos = 288;
+        arrYPos = 432; 
+      } 
+    }
+    count++;
+  }
+  
+  
 }
 
 //this is used to move the character
@@ -519,9 +620,17 @@ void keyPressed(){
      enemyAttack = enemy.getRandomMove();
      attackMenu = false;
      if(friendly.getSpeed() < enemy.getSpeed()){
-       enemyAttacking = true;
+       if(enemyAttack.canHit()){
+         enemyAttacking = true;
+       }else{
+         enemyMiss = true;
+       }
      }else{
-       playerAttacking = true; 
+       if(friendlyAttack.canHit()){
+         friendlyAttacking = true; 
+       }else{
+         friendlyMiss = true;
+       }
      }
    } 
    if(mainMenu && arrXPos == 288 && arrYPos == 432){
@@ -829,7 +938,7 @@ void tackle(){
     }
     count++;
     if(count == 80){
-      playerAttacking = false;
+      friendlyAttacking = false;
       count = 0;
       mainMenu = true; 
       arrXPos = 288;

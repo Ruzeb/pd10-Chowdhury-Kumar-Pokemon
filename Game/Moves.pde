@@ -59,9 +59,7 @@ public class Moves{
   }
   
   public void lowerHP(Pokemon target){
-   if(this.canHit()){
-       target.addHealth(this.evaluateDamage(target)*-1);
-   }
+     target.addHealth(this.evaluateDamage(target)*-1);
   }
   /*
   public void lowerEvasion(Pokemon target, int a){
@@ -79,14 +77,10 @@ public class Moves{
     animation = p; 
   }
   
-  //  playerAttacking = false;
-  //  count = 0;
-  //  mainMenu = true; 
-  //  arrXPos = 288;
-  //  arrYPos = 432;
-  public boolean animate(int count){
+   //444,92
+  public boolean animate(int count,int x,int y){
     if(count < 20 || (count > 40 && count < 60)){
-      image(attack,444,92);  
+      image(attack,x,y);  
     }
     if(count == 80){
       return true;
