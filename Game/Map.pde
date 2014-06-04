@@ -8,11 +8,19 @@ public class Map{
  Map westMap;
  Map eastMap;
  String name;
+ int maxLevel;
+ int minLevel;
  ArrayList<Pokemon> pokeList = new ArrayList<Pokemon>();
   
   
  public Map(String s){
   name = s;
+ }
+ 
+ public Map(String s,int min,int max){
+  name = s;
+  minLevel = min; 
+  maxLevel = max;
  }
  
  public PImage getMap(){
@@ -91,7 +99,7 @@ public class Map{
     Random r = new Random();
     int i = r.nextInt(pokeList.size());
     Pokemon result = pokeList.get(i);
-    result.setLevel(r.nextInt(5)+1);
+    result.setLevel(r.nextInt(minLevel+1) + (maxLevel-minLevel));
     return result;
  }
  

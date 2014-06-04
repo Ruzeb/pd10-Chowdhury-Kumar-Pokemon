@@ -44,8 +44,10 @@ PImage attackBox;
 PImage attack;
 int trainerXPos;
 int trainerYPos = 196;
-int enemyPos = -96;
+int enemyXPos = -96;
+int enemyYPos = 2;
 int count;
+int count2;
 
 Pokemon friendly;
 Pokemon enemy;
@@ -84,6 +86,7 @@ int shiftLeft = 0;
 int shiftRight = 0;
 MapLoader maps;
 MovesLoader moves;
+Pokedex dex;
 
 //IMPORTANT! EACH PIXEL IS 32*32
 //we need to come up with better pixel numbers for the character models
@@ -102,6 +105,7 @@ void setup(){
   currentMap = map.get(xpos,ypos,width,width);
   image(currentMap,0,0);
   
+  dex = new Pokedex();
   
   enemy1 = new Trainer("Valkyrie", xpos+32, ypos); 
   PImage trainer = loadImage("trainers.jpg");
@@ -198,6 +202,7 @@ void draw(){
   }
   if(loadBattle){
     loadUp();
+    enemyYPos = 2;
   }
   if(startBattle){
     fill(255);
@@ -205,10 +210,10 @@ void draw(){
     rect(0,0,width,height);
     image(textBox,0,height-textBox.height);
     tint(100);
-    image(enemyFront,enemyPos,2);
-    rect(enemyPos-2,0,15,230);
-    rect(enemyPos-2,0,224,10);
-    rect(enemyPos+210,0,15,230);
+    image(enemyFront,enemyXPos,2);
+    rect(enemyXPos-2,0,15,230);
+    rect(enemyXPos-2,0,224,10);
+    rect(enemyXPos+210,0,15,230);
     image(goldBack,trainerXPos,trainerYPos);
     if(trainerXPos > 36){
       trainerXPos = trainerXPos - 8;
@@ -217,18 +222,18 @@ void draw(){
       startBattle = false;
       startText = true;
     }
-    if(enemyPos < 416){
-      enemyPos = enemyPos + 8;
+    if(enemyXPos < 416){
+      enemyXPos = enemyXPos + 8;
     }
   }
   if(startText){
     fill(255);
     rect(0,0,width,height);
     image(textBox,0,height-textBox.height);
-    image(enemyFront,enemyPos,2);
-    rect(enemyPos-2,0,15,230);
-    rect(enemyPos-2,0,224,10);
-    rect(enemyPos+210,0,15,230);
+    image(enemyFront,enemyXPos,2);
+    rect(enemyXPos-2,0,15,230);
+    rect(enemyXPos-2,0,224,10);
+    rect(enemyXPos+210,0,15,230);
     image(goldBack,trainerXPos,196);
     fill(0);  
     text("Wild " + enemy.getName() + " appeared!",36,462);
@@ -239,10 +244,10 @@ void draw(){
     fill(255);
     rect(0,0,width,height);
     image(textBox,0,height-textBox.height);
-    image(enemyFront,enemyPos,2);
-    rect(enemyPos-2,0,15,230);
-    rect(enemyPos-2,0,224,10);
-    rect(enemyPos+210,0,15,230);
+    image(enemyFront,enemyXPos,2);
+    rect(enemyXPos-2,0,15,230);
+    rect(enemyXPos-2,0,224,10);
+    rect(enemyXPos+210,0,15,230);
     image(goldBack,trainerXPos,trainerYPos);
     trainerXPos = trainerXPos - 16;
     if(trainerXPos <= -211){
@@ -255,10 +260,10 @@ void draw(){
     fill(255);
     rect(0,0,width,height);
     image(textBox,0,height-textBox.height);
-    image(enemyFront,enemyPos,2);
-    rect(enemyPos-2,0,15,230);
-    rect(enemyPos-2,0,224,10);
-    rect(enemyPos+210,0,15,230);
+    image(enemyFront,enemyXPos,2);
+    rect(enemyXPos-2,0,15,230);
+    rect(enemyXPos-2,0,224,10);
+    rect(enemyXPos+210,0,15,230);
     fill(0);  
     openUp();
   }
@@ -356,6 +361,11 @@ void draw(){
         arrYPos = 432; 
       }
     }
+    if(enemy.getHealth() == 0){
+      mainMenu = false;
+      enemyAttacking = false;
+      enemyDead = true; 
+    }
   }
   if(enemyAttacking){
     fill(255);
@@ -426,23 +436,11 @@ void draw(){
     text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
     if(count >= 50){
       text("But it missed!", 36, 494);
+      drawDownArrow();
     }
-    if(count == 120){
-      friendlyMiss = false;
-      count = 0;
-      if(friendly.getSpeed() >= enemy.getSpeed()){
-        if(enemyAttack.canHit()){
-           enemyAttacking = true;
-        }else{
-           enemyMiss = true; 
-        }
-      }else{
-        mainMenu = true;
-        arrXPos = 288;
-        arrYPos = 432; 
-      } 
+    if(count < 100){
+      count++;
     }
-    count++;
   }
   if(enemyMiss){
     fill(255);
@@ -472,25 +470,47 @@ void draw(){
     text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
     if(count >= 50){
       text("But it missed!", 36, 494);
+      drawDownArrow();
     }
-    if(count == 120){
-      count = 0;
-      enemyMiss = false;
-      if(friendly.getSpeed() < enemy.getSpeed()){
-        if(friendlyAttack.canHit()){
-           friendlyAttacking = true;
-        }else{
-           friendlyMiss = true; 
-        }
-      }else{
-        mainMenu = true;
-        arrXPos = 288;
-        arrYPos = 432; 
-      } 
+    if(count < 100){
+      count++;
     }
-    count++;
   }
-  
+  if(enemyDead){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(textBox,0,height-textBox.height);
+    image(friendlyBack, 36, 196);
+    image(enemyFront,416,enemyYPos);
+    rect(416,228,224,224);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    image(textBox,0,height-textBox.height);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    //fill(#47C448);
+    enemy.getHealthBarColor();
+    rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
+    rect(416,304,friendly.getHealthBar(),10);
+    fill(0);
+    text(enemy.getLevel()+"",212,80);
+    text(friendly.getLevel()+"",522,292);
+    text(enemy.getName(),12,46);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",394,356);
+    text(friendly.getMaxHealth()+"",512,356);
+    if(enemyYPos > 113){
+      drawDownArrow();
+      text("Enemy " + enemy.getName() + " fainted!",36,462); 
+    }
+    if(enemyYPos < 228){
+      enemyYPos = enemyYPos + 8; 
+    }
+  }
   
 }
 
@@ -584,37 +604,11 @@ void keyPressed(){
     }    
   }
   if(key == 'x'){
-   if(startGame){
-     if(arrXPos == 80){
-       Pokemon tododile = new Pokemon("Tododile",50,64,65,43);
-       tododile.setLevel(5);
-       tododile.addMove(moves.getTackle());
-       player.addPokemon(tododile); 
-       startGame = false;
-       traveling = true;
-     }
-     if(arrXPos == 286){
-       Pokemon chikorita = new Pokemon("Chikorita",45,65,49,45);
-       chikorita.setLevel(5);
-       chikorita.addMove(moves.getTackle());
-       player.addPokemon(chikorita);
-       startGame = false;
-       traveling = true;
-     }  
-     if(arrXPos == 484){
-       Pokemon cyndaquil = new Pokemon("Cyndaquil",39,43,52,65);
-       cyndaquil.setLevel(5);
-       cyndaquil.addMove(moves.getTackle());
-       player.addPokemon(cyndaquil);
-       startGame = false;
-       traveling = true;
-     }
+   if(enemyDead){
+     enemyDead = false;
+     traveling = true; 
    }
-   if(startText){
-      //println("Goodbye");
-      startText = false;
-      movingPlayer = true;
-   } 
+    
    if(attackMenu && arrXPos == 156){
      friendlyAttack = friendly.getMoves(0);
      enemyAttack = enemy.getRandomMove();
@@ -632,17 +626,89 @@ void keyPressed(){
          friendlyMiss = true;
        }
      }
-   } 
+   }    
+ 
    if(mainMenu && arrXPos == 288 && arrYPos == 432){
      mainMenu = false;
      attackMenu = true;
      arrXPos = 156;
      arrYPos = 419;
    }
+   
    if(mainMenu && arrXPos == 484 && arrYPos == 494){
      traveling = true;
      mainMenu = false;
    }  
+   
+   if(startGame){
+     
+     if(arrXPos == 80){
+       Pokemon tododile = dex.getTododile();
+       tododile.setLevel(5);
+       tododile.addMove(moves.getTackle());
+       player.addPokemon(tododile); 
+       startGame = false;
+       traveling = true;
+       
+     }
+     if(arrXPos == 286){
+       Pokemon chikorita = dex.getChikorita();
+       chikorita.setLevel(5);
+       chikorita.addMove(moves.getTackle());
+       player.addPokemon(chikorita);
+       startGame = false;
+       traveling = true;
+     }  
+     if(arrXPos == 484){
+       Pokemon cyndaquil = dex.getCyndaquil();
+       cyndaquil.setLevel(5);
+       cyndaquil.addMove(moves.getTackle());
+       player.addPokemon(cyndaquil);
+       startGame = false;
+       traveling = true;
+     }
+     
+   }
+   
+   if(startText){
+      //println("Goodbye");
+      startText = false;
+      movingPlayer = true;
+   } 
+   
+   if(friendlyMiss && count >=50){
+     friendlyMiss = false;
+      count = 0;
+      if(friendly.getSpeed() >= enemy.getSpeed()){
+        if(enemyAttack.canHit()){
+           enemyAttacking = true;
+        }else{
+           enemyMiss = true; 
+        }
+      }else{
+        mainMenu = true;
+        arrXPos = 288;
+        arrYPos = 432; 
+      }  
+   }
+   
+   if(enemyMiss && count >= 50){
+      count = 0;
+      enemyMiss = false;
+      if(friendly.getSpeed() < enemy.getSpeed()){
+        if(friendlyAttack.canHit()){
+           friendlyAttacking = true;
+        }else{
+           friendlyMiss = true; 
+        }
+      }else{
+        mainMenu = true;
+        arrXPos = 288;
+        arrYPos = 432; 
+      }  
+   }
+    
+
  }
  if(key == 'z'){
    if(attackMenu){
@@ -677,7 +743,7 @@ void walkingAnimation(){
         friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
-        enemyPos = -96;
+        enemyXPos = -96;
       }
     }
   }
@@ -705,7 +771,7 @@ void walkingAnimation(){
         friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
-        enemyPos = -96;
+        enemyXPos = -96;
       }
     }
   }  
@@ -733,7 +799,7 @@ void walkingAnimation(){
         friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
-        enemyPos = -96;
+        enemyXPos = -96;
      }
    }
   }
@@ -761,7 +827,7 @@ void walkingAnimation(){
         friendlyBack = cleanUpImage2(friendlyBack);
         trainerXPos = width;
         trainerYPos = 196;
-        enemyPos = -96;
+        enemyXPos = -96;
      }
    }
   }
@@ -877,12 +943,12 @@ void loadUp(){
 }
 
 void drawDownArrow(){
-  if(count < 30){
+  if(count2 < 30){
    image(downArrow, 548,532);
   }
-  count++;
-  if(count == 60){
-   count = 0;
+  count2++;
+  if(count2 == 60){
+   count2 = 0;
   }  
 }
 
