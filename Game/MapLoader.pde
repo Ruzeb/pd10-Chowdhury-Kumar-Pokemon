@@ -1,7 +1,7 @@
 public class MapLoader{
  private Map[] maps;
  private MovesLoader moves = new MovesLoader();
- //private Pokedex dex = new Pokedex();
+ private Pokedex dex = new Pokedex();
  public MapLoader(){
    
   maps = new Map[4];

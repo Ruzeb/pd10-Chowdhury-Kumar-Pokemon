@@ -179,7 +179,7 @@ void draw(){
     fill(255);
     rect(0,0,width,height);
     image(downArrow,arrXPos,arrYPos);
-    image(loadImage("TododileFront.png"),-2,90);
+    image(loadImage("TotodileFront.png"),-2,90);
     image(loadImage("ChikoritaFront.png"),195,86);
     image(loadImage("CyndaquilFront.png"),392,83);
     fill(0);
@@ -292,6 +292,8 @@ void draw(){
     text(friendly.getName(),348,256);
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
   }
   if(attackMenu){
     fill(255);
@@ -320,6 +322,8 @@ void draw(){
     text(friendly.getMaxHealth()+"",512,356);
     text(friendly.getMoves(0).toString(),196,454);
     image(arrow,arrXPos,arrYPos);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
   }
   if(friendlyAttacking){    
     fill(255);
@@ -347,6 +351,8 @@ void draw(){
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
     text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
     if(!friendlyAttack.animate(count,444,92)){
       count ++;
     }else{
@@ -393,6 +399,8 @@ void draw(){
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
     text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
     if(!enemyAttack.animate(count,64,266)){
       count ++;
     }else{
@@ -434,6 +442,8 @@ void draw(){
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
     text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
     if(count >= 50){
       text("But it missed!", 36, 494);
       drawDownArrow();
@@ -468,6 +478,8 @@ void draw(){
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
     text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
     if(count >= 50){
       text("But it missed!", 36, 494);
       drawDownArrow();
@@ -503,9 +515,13 @@ void draw(){
     text(friendly.getName(),348,256);
     text(friendly.getHealth()+"",394,356);
     text(friendly.getMaxHealth()+"",512,356);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
     if(enemyYPos > 113){
+      fill(0);
       drawDownArrow();
       text("Enemy " + enemy.getName() + " fainted!",36,462); 
+      text(friendly.getName() + " gained " + enemy.getExp() + " EXP.",36,494);
     }
     if(enemyYPos < 228){
       enemyYPos = enemyYPos + 8; 
@@ -605,6 +621,7 @@ void keyPressed(){
   }
   if(key == 'x'){
    if(enemyDead){
+     friendly.addExp(enemy.getExp());
      enemyDead = false;
      traveling = true; 
    }
@@ -643,10 +660,10 @@ void keyPressed(){
    if(startGame){
      
      if(arrXPos == 80){
-       Pokemon tododile = dex.getTododile();
-       tododile.setLevel(5);
-       tododile.addMove(moves.getTackle());
-       player.addPokemon(tododile); 
+       Pokemon totodile = dex.getTotodile();
+       totodile.setLevel(5);
+       totodile.addMove(moves.getTackle());
+       player.addPokemon(totodile); 
        startGame = false;
        traveling = true;
        

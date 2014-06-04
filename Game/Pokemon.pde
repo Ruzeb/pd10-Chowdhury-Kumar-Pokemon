@@ -7,6 +7,9 @@ public class Pokemon{
   private int baseDefense;
   private int baseSpeed;
   private int maxHealth;
+  private int exp;
+  private int expIncreaseLevel;
+  private int baseReturnExp;
   private int IV;
   private int health;
   private int attack;
@@ -42,17 +45,22 @@ public class Pokemon{
     front = loadImage(name + "Front.png");
   }
   
-  public Pokemon(String n, int h, int d, int a, int s){
+  public Pokemon(String n, int h, int d, int a, int s,int e){
     Random r = new Random();
     baseHealth = h;
     baseDefense = d;
     baseAttack = a;
     baseSpeed = s;
     name = n;
+    baseReturnExp = e;
     IV = r.nextInt(5) + 9;
     back = loadImage(name + "Back.png");
     front = loadImage(name + "Front.png");
     moves = new ArrayList<Moves>();
+  }
+  
+  public int getExp(){
+    return (baseReturnExp * level)/7;
   }
   
   public void addMove(Moves m){
@@ -74,13 +82,31 @@ public class Pokemon{
   public void setLevel(int i){
     level = i;
     setMaxHealth();
+    health = maxHealth;
     setDefense();
     setAttack();
     setSpeed();
+    exp = i * i * i;
+    expIncreaseLevel = (i+1)*(i+1)*(i+1);
   }
   
   public void addLevel(){
     setLevel(level + 1); 
+  }
+  
+  public void addExp(int e){
+    exp = exp + e;
+    if(exp >= expIncreaseLevel){
+      int k = exp - expIncreaseLevel;
+      addLevel(); 
+      addExp(k);
+    }
+  }
+  
+  public int getExpBar(){
+    double d = (double)(exp-(level*level*level)) / (double)(expIncreaseLevel-(level*level*level));
+    d = d * -254;
+    return (int)d; 
   }
   
   public int getLevel(){
