@@ -93,8 +93,5 @@ public class Moves{
     return name; 
   }
   
-}
-  
-  
-  
+} 
     

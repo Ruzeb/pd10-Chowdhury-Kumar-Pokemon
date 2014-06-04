@@ -22,6 +22,11 @@ boolean friendlyMiss;
 boolean enemyMiss;
 boolean battleText;
 boolean enemyDead;
+boolean startMenu;
+boolean inBag;
+
+PImage menu;
+PImage bagMenu;
 
 //battle variables
 PImage bar;
@@ -142,8 +147,8 @@ void setup(){
   gold = down;
   
   //loading battle screen stuff
-  f = createFont("Arial",16,true);
-  textFont(f,36);
+  f = createFont("Pokemon GB",16,true);
+  textFont(f,25);
   stage1 = loadImage("PokeStage1.png");
   stage2 = loadImage("PokeStage2.png");
   stage3 = loadImage("PokeStage3.png");
@@ -165,7 +170,8 @@ void setup(){
   attack = loadImage("Tackle.png");
   attack = cleanUpImage2(attack);
   
-
+  menu = loadImage("StartMenu.png");
+  bagMenu = loadImage("BagScreen.png");
   
   image(gold,256,256);
  //image(enemy1.getFront(), xpos+32, ypos);
@@ -199,6 +205,20 @@ void draw(){
     imageMode(CORNER);
     image(gold,256,256);
     walkingAnimation();
+  }
+  if(startMenu){
+    setNewMap();
+    loadBorders();
+    
+    imageMode(CORNER);
+    currentMap = map.get(xpos,ypos,width,height);
+    image(currentMap,0,0);
+    //image(enemy1.getFront(), 160-xpos, 160-ypos);
+    imageMode(CORNER);
+    image(gold,256,256);
+    walkingAnimation();
+    image(menu,454,1);
+    println(mouseX + ", " + mouseY); 
   }
   if(loadBattle){
     loadUp();
@@ -286,14 +306,27 @@ void draw(){
     friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
+    text("Fight",328,468);
+    text("Pack",328,532);
+    text("PKMN",517,468);
+    text("Run",517,532);
+    println(mouseX + ", " + mouseY);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
+  }
+  //328,468
+  //328,532
+  //517,468
+  //517,532
+  if(inBag){
+    image(bagMenu,0,0); 
   }
   if(attackMenu){
     fill(255);
@@ -314,12 +347,13 @@ void draw(){
     friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
     text(friendly.getMoves(0).toString(),196,454);
     image(arrow,arrXPos,arrYPos);
     fill(#12A2FF);
@@ -344,12 +378,13 @@ void draw(){
     friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
     text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
@@ -392,12 +427,13 @@ void draw(){
     friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
     text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
@@ -435,12 +471,13 @@ void draw(){
     friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
     text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
@@ -471,12 +508,13 @@ void draw(){
     friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
     text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
@@ -509,19 +547,21 @@ void draw(){
     friendly.getHealthBarColor();
     rect(416,304,friendly.getHealthBar(),10);
     fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
     text(enemy.getName(),12,46);
     text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getMaxHealth()+"",512,356);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
     if(enemyYPos > 113){
       fill(0);
       drawDownArrow();
       text("Enemy " + enemy.getName() + " fainted!",36,462); 
-      text(friendly.getName() + " gained " + enemy.getExp() + " EXP.",36,494);
+      text(friendly.getName() + " gained " + enemy.getExp(),36,494);
+      text("EXP points.",36,526);
     }
     if(enemyYPos < 228){
       enemyYPos = enemyYPos + 8; 
@@ -657,6 +697,11 @@ void keyPressed(){
      mainMenu = false;
    }  
    
+   if(mainMenu && arrXPos == 288 && arrYPos == 494){
+     mainMenu = false;
+     inBag = true; 
+   }
+   
    if(startGame){
      
      if(arrXPos == 80){
@@ -733,6 +778,28 @@ void keyPressed(){
      mainMenu = true;
      arrXPos = 288;
      arrYPos = 432;
+   } 
+   if(startMenu){
+     traveling = true;
+     startMenu = false; 
+   }
+   if(inBag){
+     inBag = false;
+     mainMenu = true; 
+   }
+ }
+ 
+ if(key == 'm'){
+   if(traveling){
+     traveling = false;
+     startMenu = true;
+   } 
+ }
+ if(key == 'r'){
+   println("Hello");
+   fill(0);
+   for(int i = 0; i <width; i = i + 50 ){
+     line(i,0,i,height);
    } 
  }
 }
