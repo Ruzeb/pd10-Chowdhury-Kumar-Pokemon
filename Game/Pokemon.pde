@@ -22,12 +22,12 @@ public class Pokemon{
   private PImage back;
   private PImage front;
   
-  public Pokemon(int h, int at, int d, int a, int acc,String n, ArrayList<Moves> m){
+  public Pokemon(int h, int at, int d, int s, int acc,String n, ArrayList<Moves> m){
     this.health = h;
     this.maxHealth = h;
     this.attack = at;
     this.defense = d;
-    this.speed = a;
+    this.speed = s;
     this.accuracy = acc;
     this.name = n;
     this.moves = m;

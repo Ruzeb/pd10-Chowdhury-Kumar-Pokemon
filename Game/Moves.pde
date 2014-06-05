@@ -20,7 +20,7 @@ public class Moves{
   }
   
   
-  //accuracy is from 255
+  //accuracy is from 100%
   public int getAccuracy(){
     return this.accuracy;
   }
@@ -30,25 +30,25 @@ public class Moves{
   //in the actual game.
   //Lets not implement this yet and keep the formula down there
   //which is used in the game
-  /*
+  
   public boolean canHit(Pokemon target){
-    if ((this.getAccuracy() * (this.user.getAccuracy() / target.getPokeEvasion())) > 1 && 
-        (Math.random() < .92)){
+    if ((this.getAccuracy() * (this.user.getAccuracy() / target.getPokeEvasion())) > 1){
            return true;
         }
    else{
         return false;
    }
   }
-  */
+  /*
   public boolean canHit(){
     Random r = new Random();
-    if(r.nextInt(255) <= this.accuracy-1){
+    if(r.nextInt(100) <= this.accuracy-1){
       return true;
     }else{
       return false;
     }
   }
+  */
   
   public int evaluateDamage(Pokemon target){
     int damage = 0;

@@ -671,13 +671,13 @@ void keyPressed(){
      enemyAttack = enemy.getRandomMove();
      attackMenu = false;
      if(friendly.getSpeed() < enemy.getSpeed()){
-       if(enemyAttack.canHit()){
+       if(enemyAttack.canHit(friendly)){
          enemyAttacking = true;
        }else{
          enemyMiss = true;
        }
      }else{
-       if(friendlyAttack.canHit()){
+       if(friendlyAttack.canHit(friendly)){
          friendlyAttacking = true; 
        }else{
          friendlyMiss = true;
@@ -742,7 +742,7 @@ void keyPressed(){
      friendlyMiss = false;
       count = 0;
       if(friendly.getSpeed() >= enemy.getSpeed()){
-        if(enemyAttack.canHit()){
+        if(enemyAttack.canHit(friendly)){
            enemyAttacking = true;
         }else{
            enemyMiss = true; 
@@ -758,7 +758,7 @@ void keyPressed(){
       count = 0;
       enemyMiss = false;
       if(friendly.getSpeed() < enemy.getSpeed()){
-        if(friendlyAttack.canHit()){
+        if(friendlyAttack.canHit(friendly)){
            friendlyAttacking = true;
         }else{
            friendlyMiss = true; 
