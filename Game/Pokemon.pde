@@ -17,6 +17,7 @@ public class Pokemon{
   private int speed;
   private int accuracy;
   private int level;
+  private int evasion;
   private String name;
   private ArrayList<Moves> moves;
   private PImage back;
@@ -54,6 +55,8 @@ public class Pokemon{
     name = n;
     baseReturnExp = e;
     IV = r.nextInt(5) + 9;
+    evasion = 1;
+    accuracy = 1;
     back = loadImage(name + "Back.png");
     front = loadImage(name + "Front.png");
     moves = new ArrayList<Moves>();
@@ -210,7 +213,7 @@ public class Pokemon{
   }
   
   public int getPokeEvasion(){
-    return (this.getAccuracy() / this.getSpeed()); 
+    return this.evasion;
   }
   
   public String getName(){

@@ -385,7 +385,8 @@ void draw(){
     text(friendly.getHealth()+"",384,356);
     text(friendly.getMaxHealth()+"",492,356);
     text("/",453,356);
-    text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
+    text(friendly.getName() + " used", 36, 462);
+    text(friendlyAttack.toString(),36,494);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
     if(!friendlyAttack.animate(count,444,92)){
@@ -434,7 +435,8 @@ void draw(){
     text(friendly.getHealth()+"",384,356);
     text(friendly.getMaxHealth()+"",492,356);
     text("/",453,356);
-    text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
+    text(enemy.getName() + " used", 36, 462);
+    text(enemyAttack.toString(),36,494);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
     if(!enemyAttack.animate(count,64,266)){
@@ -478,11 +480,13 @@ void draw(){
     text(friendly.getHealth()+"",384,356);
     text(friendly.getMaxHealth()+"",492,356);
     text("/",453,356);
-    text(friendly.getName() + " used " + friendlyAttack.toString(), 36, 462);
+    text(friendly.getName() + " used", 36, 462);
+    text(friendlyAttack.toString(),36,494);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
     if(count >= 50){
-      text("But it missed!", 36, 494);
+      fill(0);
+      text("But it missed!", 36, 526);
       drawDownArrow();
     }
     if(count < 100){
@@ -515,11 +519,13 @@ void draw(){
     text(friendly.getHealth()+"",384,356);
     text(friendly.getMaxHealth()+"",492,356);
     text("/",453,356);
-    text(enemy.getName() + " used " + enemyAttack.toString(), 36, 462);
+    text(enemy.getName() + " used", 36, 462);
+    text(enemyAttack.toString(),36,494);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
     if(count >= 50){
-      text("But it missed!", 36, 494);
+      fill(0);
+      text("But it missed!", 36, 526);
       drawDownArrow();
     }
     if(count < 100){
@@ -677,7 +683,7 @@ void keyPressed(){
          enemyMiss = true;
        }
      }else{
-       if(friendlyAttack.canHit(friendly)){
+       if(friendlyAttack.canHit(enemy)){
          friendlyAttacking = true; 
        }else{
          friendlyMiss = true;

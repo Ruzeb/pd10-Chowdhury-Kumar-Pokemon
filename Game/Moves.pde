@@ -32,12 +32,13 @@ public class Moves{
   //which is used in the game
   
   public boolean canHit(Pokemon target){
-    if ((this.getAccuracy() * (this.user.getAccuracy() / target.getPokeEvasion())) > 1){
-           return true;
-        }
-   else{
-        return false;
-   }
+    Random r = new Random();
+    int i = this.getAccuracy() * (this.user.getAccuracy()/target.getPokeEvasion());
+    if(r.nextInt(100) + 1 <= i){
+      return true; 
+    }else{
+      return false; 
+    }
   }
   /*
   public boolean canHit(){
@@ -75,12 +76,13 @@ public class Moves{
   
   public void setAnimation(PImage p){
     animation = p; 
+    animation = cleanUpImage2(animation);
   }
   
    //444,92
   public boolean animate(int count,int x,int y){
     if(count < 20 || (count > 40 && count < 60)){
-      image(attack,x,y);  
+      image(animation,x,y);  
     }
     if(count == 80){
       return true;
