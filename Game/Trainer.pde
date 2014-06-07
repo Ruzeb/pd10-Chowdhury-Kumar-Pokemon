@@ -7,13 +7,14 @@ public class Trainer{
   private String name;
   private int locX;
   private int locY;
+  private int numPotions;
   private String textBox = "";
   
   public Trainer(String n, int x, int y){
     this.name = n;
-    
     this.locX = x;
     this.locY = y;
+    numPotions = 10;
   }
   
   public void addPokemon(Pokemon p){
@@ -47,6 +48,20 @@ public class Trainer{
   
   public PImage getFront(){
     return this.mapFront;
+  }
+  
+  public boolean usePotion(Pokemon p){
+    if(numPotions == 0){
+      return false;
+    }else{
+      p.addHealth(20);
+      numPotions --;
+      return true; 
+    }
+  }
+  
+  public int getNumPotions(){ 
+    return numPotions;
   }
 }
   

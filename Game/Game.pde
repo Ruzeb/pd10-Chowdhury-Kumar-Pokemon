@@ -35,6 +35,7 @@ PImage pokeFS;
 
 PImage arrow;
 PImage downArrow;
+PImage redArrow;
 int arrXPos = 80;
 int arrYPos = 336;
 
@@ -163,6 +164,8 @@ void setup(){
   attackBox = loadImage("AttackBox.png");
   arrow = loadImage("Arrow.png");
   downArrow = loadImage("DownArrow.png");
+  redArrow = loadImage("RedArrow.png");
+  //redArrow = cleanUpImage2(redArrow);
   bar = loadImage("PokemonBar.png");
   bar = cleanUpImage2(bar);
   enemyBar = loadImage("EnemyBar.png");
@@ -218,6 +221,10 @@ void draw(){
     image(gold,256,256);
     walkingAnimation();
     image(menu,454,1);
+    textFont(f,19);
+    text("Pokemon",490,52);
+    text("Pack",490,74);
+    image(arrow,mouseX,mouseY);
     println(mouseX + ", " + mouseY); 
   }
   if(loadBattle){
@@ -317,7 +324,6 @@ void draw(){
     text("Pack",328,532);
     text("PKMN",517,468);
     text("Run",517,532);
-    println(mouseX + ", " + mouseY);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
   }
@@ -327,6 +333,14 @@ void draw(){
   //517,532
   if(inBag){
     image(bagMenu,0,0); 
+    fill(0);
+    text("Potion",250,80);
+    text("Poke Balls", 250,140);
+    text("x" + player.getNumPotions(),560,90);
+    fill(255);
+    text("ITEMS",22,288);
+    image(redArrow,arrXPos,arrYPos);
+    println(mouseX + ", " + mouseY);
   }
   if(attackMenu){
     fill(255);
@@ -590,6 +604,11 @@ void keyPressed(){
          arrYPos = arrYPos - 30;
        } 
      }
+     if(inBag){
+       if(arrYPos > 50){
+         arrYPos = arrYPos - 60;
+       }
+     }
    }
    if(keyCode == RIGHT){
      if(startGame){
@@ -625,6 +644,11 @@ void keyPressed(){
        if(arrYPos < 509){
          arrYPos = arrYPos + 30;
        } 
+     }
+     if(inBag){
+       if(arrYPos < 110){
+         arrYPos = arrYPos + 60;
+       }
      }
    }
     //working over here
@@ -702,12 +726,21 @@ void keyPressed(){
      traveling = true;
      mainMenu = false;
    }  
-   
+   if(inBag){
+    if(arrYPos == 50 && player.getNumPotions() > 0){
+      inBag = false;
+      mainMenu = true;
+      player.usePotion(friendly);
+      arrXPos = 288;
+      arrYPos = 432;
+    } 
+   }
    if(mainMenu && arrXPos == 288 && arrYPos == 494){
      mainMenu = false;
      inBag = true; 
+     arrXPos = 196;
+     arrYPos = 50; 
    }
-   
    if(startGame){
      
      if(arrXPos == 80){
@@ -786,12 +819,15 @@ void keyPressed(){
      arrYPos = 432;
    } 
    if(startMenu){
+     textFont(f,25);
      traveling = true;
      startMenu = false; 
    }
    if(inBag){
      inBag = false;
      mainMenu = true; 
+     arrXPos = 288;
+     arrYPos = 432; 
    }
  }
  

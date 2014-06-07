@@ -77,6 +77,10 @@ public class Pokemon{
     return moves.get(i); 
   }
   
+  public int getMovesSize(){
+    return moves.size();
+  } 
+  
   public Moves getRandomMove(){
     Random r = new Random();
     return getMoves(r.nextInt(moves.size())); 
@@ -167,6 +171,9 @@ public class Pokemon{
     this.health = h;
     if(health < 0){
       health = 0; 
+    }
+    if(health > maxHealth){
+      health = maxHealth; 
     }
   }
   
