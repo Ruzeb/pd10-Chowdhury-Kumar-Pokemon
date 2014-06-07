@@ -24,6 +24,8 @@ boolean battleText;
 boolean enemyDead;
 boolean startMenu;
 boolean inBag;
+boolean potionUsed;
+boolean justUsedPotion;
 
 PImage menu;
 PImage bagMenu;
@@ -342,6 +344,44 @@ void draw(){
     image(redArrow,arrXPos,arrYPos);
     println(mouseX + ", " + mouseY);
   }
+  if(potionUsed){
+    fill(255);
+    rect(0,0,width,height);
+    //image(battleBox,0,height-battleBox.height);
+    image(textBox,0,height-textBox.height);
+    image(friendlyBack, 36, 196);
+    image(enemyFront,416,2);
+    image(bar,316,224);
+    image(enemyBar,6,6);
+    rect(414,0,10,224);
+    rect(414,0,224,10);
+    rect(337,1,10,150);
+    rect(312,216,10,170);
+    //fill(#47C448);
+    enemy.getHealthBarColor();
+    rect(108,92,enemy.getHealthBar(),10);
+    friendly.getHealthBarColor();
+    rect(416,304,friendly.getHealthBar(),10);
+    fill(0);
+    text(":L" + enemy.getLevel()+"",192,80);
+    text(":L" + friendly.getLevel()+"",502,292);
+    text(enemy.getName(),12,46);
+    text(friendly.getName(),348,256);
+    text(friendly.getHealth()+"",384,356);
+    text(friendly.getMaxHealth()+"",492,356);
+    text("/",453,356);
+    fill(#12A2FF);
+    rect(608,371,friendly.getExpBar(),8);
+    fill(0);
+    text(friendly.getName() + " used a",36,462);
+    text("Potion!",36,494);
+    if(count > 50){
+      drawDownArrow(); 
+    }
+    if(count < 100){
+      count ++;
+    } 
+  }
   if(attackMenu){
     fill(255);
     rect(0,0,width,height);
@@ -459,9 +499,10 @@ void draw(){
       enemyAttack.lowerHP(friendly);
       enemyAttacking = false;
       count = 0;
-      if(friendly.getSpeed() < enemy.getSpeed()){
+      if(friendly.getSpeed() < enemy.getSpeed() && justUsedPotion == false){
         friendlyAttacking = true;
       }else{
+        justUsedPotion = false;
         mainMenu = true;
         arrXPos = 288;
         arrYPos = 432; 
@@ -729,10 +770,7 @@ void keyPressed(){
    if(inBag){
     if(arrYPos == 50 && player.getNumPotions() > 0){
       inBag = false;
-      mainMenu = true;
-      player.usePotion(friendly);
-      arrXPos = 288;
-      arrYPos = 432;
+      potionUsed = true;
     } 
    }
    if(mainMenu && arrXPos == 288 && arrYPos == 494){
@@ -796,17 +834,29 @@ void keyPressed(){
    if(enemyMiss && count >= 50){
       count = 0;
       enemyMiss = false;
-      if(friendly.getSpeed() < enemy.getSpeed()){
-        if(friendlyAttack.canHit(friendly)){
+      if(friendly.getSpeed() < enemy.getSpeed() && justUsedPotion == false){
+        if(friendlyAttack.canHit(enemy)){
            friendlyAttacking = true;
         }else{
            friendlyMiss = true; 
         }
       }else{
+        justUsedPotion = false;
         mainMenu = true;
         arrXPos = 288;
         arrYPos = 432; 
       }  
+   }
+   if(potionUsed && count >= 50){
+      potionUsed = false;
+      justUsedPotion = true;
+      count = 0;
+      player.usePotion(friendly);
+      if(enemyAttack.canHit(friendly)){
+        enemyAttacking = true;
+      }else{
+        enemyMiss = true; 
+      }
    }
     
 
@@ -1100,44 +1150,6 @@ void openUp(){
   }  
   count++;
 }
-
-void tackle(){
-    fill(255);
-    rect(0,0,width,height);
-    //image(battleBox,0,height-battleBox.height);
-    image(textBox,0,height-textBox.height);
-    image(friendlyBack, 36, 196);
-    image(enemyFront,416,2);
-    image(bar,316,224);
-    image(enemyBar,6,6);
-    rect(414,0,10,224);
-    rect(414,0,224,10);
-    rect(337,1,10,150);
-    rect(312,216,10,170);
-    fill(#47C448);
-    rect(108,92,192,10);
-    rect(416,304,192,10);
-    fill(0);
-    text(enemy.getLevel()+"",212,80);
-    text(friendly.getLevel()+"",522,292);
-    text(enemy.getName(),12,46);
-    text(friendly.getName(),348,256);
-    text(friendly.getHealth()+"",394,356);
-    text(friendly.getHealth()+"",512,356);
-    text(friendly.getName() + " used tackle!", 36, 462);
-    if(count < 20 || (count > 40 && count < 60)){
-      image(attack,444,92);  
-    }
-    count++;
-    if(count == 80){
-      friendlyAttacking = false;
-      count = 0;
-      mainMenu = true; 
-      arrXPos = 288;
-      arrYPos = 432;
-    }
-}
-
 
 PImage cleanUpImage(PImage p){
  PImage newImg = createImage(p.width,p.height,ARGB);
