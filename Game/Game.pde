@@ -1,3 +1,7 @@
+import ddf.minim.*;
+Minim minim;
+AudioPlayer aplayer;
+
 boolean movingLeft;
 boolean movingRight;
 boolean movingUp;
@@ -66,6 +70,7 @@ Moves enemyAttack;
 
 //end here!
 Map current;
+
 PImage map;
 PImage currentMap;
 PImage leftMap;
@@ -181,7 +186,9 @@ void setup(){
   bagMenu = loadImage("BagScreen.png");
   
   image(gold,256,256);
-  
+  minim = new Minim(this);
+  aplayer = minim.loadFile("CherryGroveCity.mp3",2048);
+  aplayer.play();
  //image(enemy1.getFront(), xpos+32, ypos);
 }
 
@@ -189,6 +196,11 @@ void draw(){
   //(80,336)
   //(286,336);
   //(484,336);
+  if(!aplayer.isPlaying()){
+    aplayer.pause();
+    aplayer.rewind();
+    aplayer.play(); 
+  }  
   if(startGame){
     fill(255);
     rect(0,0,width,height);
