@@ -42,6 +42,7 @@ PImage pokeFS;
 PImage arrow;
 PImage downArrow;
 PImage redArrow;
+PImage smallArrow;
 int arrXPos = 80;
 int arrYPos = 336;
 
@@ -174,6 +175,7 @@ void setup(){
   arrow = loadImage("Arrow.png");
   downArrow = loadImage("DownArrow.png");
   redArrow = loadImage("RedArrow.png");
+  smallArrow = loadImage("SmallArrow.png");
   //redArrow = cleanUpImage2(redArrow);
   bar = loadImage("PokemonBar.png");
   bar = cleanUpImage2(bar);
@@ -245,7 +247,7 @@ void draw(){
     textFont(f,19);
     text("Pokemon",490,52);
     text("Pack",490,74);
-    image(arrow,mouseX,mouseY);
+    image(smallArrow,arrXPos,arrYPos);
     println(mouseX + ", " + mouseY); 
   }
   if(loadBattle){
@@ -669,6 +671,11 @@ void keyPressed(){
          arrYPos = arrYPos - 60;
        }
      }
+     if(startMenu){
+       if(arrYPos > 30){
+         arrYPos = arrYPos + 22;
+       } 
+     }
    }
    if(keyCode == RIGHT){
      if(startGame){
@@ -709,6 +716,11 @@ void keyPressed(){
        if(arrYPos < 110){
          arrYPos = arrYPos + 60;
        }
+     }
+     if(startMenu){
+       if(arrYPos < 52){
+         arrYPos = arrYPos - 22;
+       } 
      }
    }
     //working over here
@@ -904,6 +916,8 @@ void keyPressed(){
    if(traveling){
      traveling = false;
      startMenu = true;
+     arrXPos = 474;
+     arrYPos = 30;
    } 
  }
  if(key == 'r'){
