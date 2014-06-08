@@ -21,8 +21,12 @@ public class Trainer{
     pokemon.add(p); 
   }
   
-  public String getLocation(){
-    return "( " + locX + " , " + locY + " )";
+  public int getX(){
+    return this.locX;
+  }
+  
+  public int getY(){
+    return this.locY;
   }
   
   
@@ -40,10 +44,6 @@ public class Trainer{
   
   public void setText(String text){
     this.textBox = text;
-  }
-  
-  public void setFront(PImage p){
-    this.mapFront = p;
   }
   
   public PImage getFront(){

@@ -36,10 +36,10 @@ public class TrainerLoader{
     return trainers[1];
   }
   public Trainer getGirl(){
-    return trainers[3];
+    return trainers[2];
   }
   public Trainer getOldMan(){
-    return trainers[4];
+    return trainers[3];
   }
   public Trainer getEnemy(){
     return trainers[4];
