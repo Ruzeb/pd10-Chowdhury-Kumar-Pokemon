@@ -225,8 +225,8 @@ void draw(){
     imageMode(CORNER);
     currentMap = map.get(xpos,ypos,width,height);
     image(currentMap,0,0);
-    image(trainer.getBoy().getFront(), 160 - xpos, 160-ypos);
-    image(trainer.getGirl().getFront(), 20 - xpos, 245 - ypos);
+    //image(trainer.getBoy().getFront(), 160 - xpos, 160-ypos);
+    //image(trainer.getGirl().getFront(), 20 - xpos, 245 - ypos);
     //println(xpos + " " + ypos);
     
     imageMode(CORNER);
