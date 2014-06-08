@@ -1,9 +1,8 @@
 public class Trainer{
   
-  private ArrayList<Pokemon> pokemon = new ArrayList<Pokemon>();
+  private ArrayList<Pokemon> pokemon;
   private PImage battleFront;
   private PImage mapFront;
-  private PImage mapBack;
   private String name;
   private int locX;
   private int locY;
@@ -15,6 +14,7 @@ public class Trainer{
     this.locX = x;
     this.locY = y;
     numPotions = 10;
+    pokemon = new ArrayList<Pokemon>();
   }
   
   public void addPokemon(Pokemon p){
@@ -62,6 +62,11 @@ public class Trainer{
   
   public int getNumPotions(){ 
     return numPotions;
+  }
+  
+  public void setAnimation(PImage p){
+    mapFront = p;
+    mapFront = cleanUpImage2(mapFront);
   }
 }
   

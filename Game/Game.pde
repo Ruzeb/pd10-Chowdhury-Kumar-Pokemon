@@ -94,6 +94,7 @@ int shiftLeft = 0;
 int shiftRight = 0;
 MapLoader maps;
 MovesLoader moves;
+TrainerLoader trainer;
 Pokedex dex;
 
 //IMPORTANT! EACH PIXEL IS 32*32
@@ -106,6 +107,7 @@ void setup(){
   frameRate(80);
   maps = new MapLoader();
   moves = new MovesLoader();
+  trainer = new TrainerLoader();
   current = maps.getNewBark();
   map = current.getMap();
   xpos = 0;
@@ -115,9 +117,9 @@ void setup(){
   
   dex = new Pokedex();
   
-  enemy1 = new Trainer("Valkyrie", xpos+32, ypos); 
-  PImage trainer = loadImage("trainers.jpg");
-  enemy1.setFront(trainer.get(49,94,32,32));
+  //enemy1 = new Trainer("Valkyrie", xpos+32, ypos); 
+  //PImage trainer = loadImage("trainers.jpg");
+  //enemy1.setFront(trainer.get(49,94,32,32));
   
   
   player = new Trainer("Gold", 256,256);
@@ -179,6 +181,7 @@ void setup(){
   bagMenu = loadImage("BagScreen.png");
   
   image(gold,256,256);
+  
  //image(enemy1.getFront(), xpos+32, ypos);
 }
 
@@ -198,6 +201,8 @@ void draw(){
     //println(mouseX + ", " + mouseY); 
   }
   
+
+  
   if(traveling){
     
     setNewMap();
@@ -209,6 +214,7 @@ void draw(){
     //image(enemy1.getFront(), 160-xpos, 160-ypos);
     imageMode(CORNER);
     image(gold,256,256);
+    
     walkingAnimation();
   }
   if(startMenu){
@@ -221,6 +227,7 @@ void draw(){
     //image(enemy1.getFront(), 160-xpos, 160-ypos);
     imageMode(CORNER);
     image(gold,256,256);
+    
     walkingAnimation();
     image(menu,454,1);
     textFont(f,19);
