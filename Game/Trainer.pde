@@ -7,7 +7,7 @@ public class Trainer{
   private int locX;
   private int locY;
   private int numPotions;
-  priavte int numPokeBalls;
+  private int numPokeBalls;
   private String textBox = "";
   
   public Trainer(String n, int x, int y){

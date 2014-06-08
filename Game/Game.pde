@@ -819,6 +819,7 @@ void keyPressed(){
        Pokemon totodile = dex.getTotodile();
        totodile.setLevel(5);
        totodile.addMove(moves.getTackle());
+       totodile.addMove(moves.getWaterGun());
        player.addPokemon(totodile); 
        startGame = false;
        traveling = true;
@@ -828,6 +829,7 @@ void keyPressed(){
        Pokemon chikorita = dex.getChikorita();
        chikorita.setLevel(5);
        chikorita.addMove(moves.getTackle());
+       chikorita.addMove(moves.getCut());
        player.addPokemon(chikorita);
        startGame = false;
        traveling = true;
@@ -836,6 +838,7 @@ void keyPressed(){
        Pokemon cyndaquil = dex.getCyndaquil();
        cyndaquil.setLevel(5);
        cyndaquil.addMove(moves.getTackle());
+       cyndaquil.addMove(moves.getEmber());
        player.addPokemon(cyndaquil);
        startGame = false;
        traveling = true;
