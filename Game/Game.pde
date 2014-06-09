@@ -288,7 +288,8 @@ void draw(){
   
   if (trainerBattle){
    image(EnemyTrainer.getText(), 0,height-textBox.height);
-   
+   if (traveling)
+     trainerBattle = false;
   }
   
   if(startText){
@@ -1012,6 +1013,7 @@ void walkingAnimation(){
             traveling = false;
             trainerBattle = true;
             loadBattle = true;
+            
             enemy = t.getPokemon().get(0);
             enemyFront = enemy.getFront();
             enemyFront = cleanUpImage2(enemyFront);
@@ -1022,8 +1024,9 @@ void walkingAnimation(){
             trainerYPos = 196;
             enemyXPos = -96;
             t.setBattled();
-            trainerBattle = false;
+            //trainerBattle = false;
       }
+      //trainerBattle = false;
         }
       }
     }
@@ -1061,6 +1064,7 @@ void walkingAnimation(){
             traveling = false;
             trainerBattle = true;
             loadBattle = true;
+
             enemy = t.getPokemon().get(0);
             enemyFront = enemy.getFront();
             enemyFront = cleanUpImage2(enemyFront);
@@ -1071,7 +1075,9 @@ void walkingAnimation(){
             trainerYPos = 196;
             enemyXPos = -96;
             t.setBattled();
+           // trainerBattle = false;
       }
+      //trainerBattle = false;
         }
       }
     }
@@ -1109,6 +1115,7 @@ void walkingAnimation(){
             traveling = false;
             trainerBattle = true;
             loadBattle = true;
+            trainerBattle = false;
             enemy = t.getPokemon().get(0);
             enemyFront = enemy.getFront();
             enemyFront = cleanUpImage2(enemyFront);
@@ -1119,7 +1126,9 @@ void walkingAnimation(){
             trainerYPos = 196;
             enemyXPos = -96;
             t.setBattled();
+           // trainerBattle = false;
       }
+      //trainerBattle = false;
         }
       }
    }
@@ -1157,6 +1166,7 @@ void walkingAnimation(){
             traveling = false;
             trainerBattle = true;
             loadBattle = true;
+            trainerBattle = false;
             enemy = t.getPokemon().get(0);
             enemyFront = enemy.getFront();
             enemyFront = cleanUpImage2(enemyFront);
@@ -1167,7 +1177,9 @@ void walkingAnimation(){
             trainerYPos = 196;
             enemyXPos = -96;
             t.setBattled();
+           // trainerBattle = false;
       }
+      //trainerBattle = false;
         }
       }
    }
