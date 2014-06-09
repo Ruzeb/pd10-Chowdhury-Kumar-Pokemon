@@ -28,6 +28,10 @@ public class Pokedex{
    return new Pokemon("Hoothoot",60,30,30,50,52); 
  }
  
+ //public Pokemon getPikachu(){
+  // return new Pokemon("Pikachu", 35, 30, 55, 90, 82);
+ //}
+ 
  
    
 }

@@ -8,7 +8,8 @@ public class Trainer{
   private int locY;
   private int numPotions;
   private int numPokeBalls;
-  private String textBox = "";
+  private PImage textBox;
+  private boolean battled;
   
   public Trainer(String n, int x, int y){
     this.name = n;
@@ -16,6 +17,7 @@ public class Trainer{
     this.locY = y;
     numPotions = 10;
     pokemon = new ArrayList<Pokemon>();
+    battled = false;
   }
   
   public void addPokemon(Pokemon p){
@@ -31,6 +33,10 @@ public class Trainer{
   }
   
   
+  public void setBattled(){
+    this.battled = true;
+  }
+  
   public String getName(){
     return this.name;
   }
@@ -39,12 +45,12 @@ public class Trainer{
     return this.pokemon;
   }
   
-  public String getText(){
+  public PImage getText(){
     return this.textBox;
   }
   
-  public void setText(String text){
-    this.textBox = text;
+  public void setText(PImage p){
+    this.textBox = p;
   }
   
   public PImage getFront(){

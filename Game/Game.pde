@@ -30,6 +30,7 @@ boolean startMenu;
 boolean inBag;
 boolean potionUsed;
 boolean justUsedPotion;
+boolean trainerBattle;
 
 PImage menu;
 PImage bagMenu;
@@ -69,6 +70,8 @@ PImage enemyFront;
 Moves friendlyAttack;
 Moves enemyAttack;
 
+Trainer EnemyTrainer;
+
 //end here!
 Map current;
 
@@ -102,6 +105,7 @@ MapLoader maps;
 MovesLoader moves;
 TrainerLoader trainer;
 Pokedex dex;
+
 
 //IMPORTANT! EACH PIXEL IS 32*32
 //we need to come up with better pixel numbers for the character models
@@ -218,7 +222,7 @@ void draw(){
 
   
   if(traveling){
-    println(current.getMapCollisions().get(xpos + mouseX,ypos + mouseY));
+    //println(current.getMapCollisions().get(xpos + mouseX,ypos + mouseY));
     setNewMap();
     loadBorders();
     
@@ -233,6 +237,7 @@ void draw(){
     image(gold,256,256);
     
     walkingAnimation();
+
   }
   if(startMenu){
     setNewMap();
@@ -251,7 +256,7 @@ void draw(){
     text("Pokemon",490,52);
     text("Pack",490,74);
     image(smallArrow,arrXPos,arrYPos);
-    println(mouseX + ", " + mouseY); 
+    //println(mouseX + ", " + mouseY); 
   }
   if(loadBattle){
     loadUp();
@@ -278,7 +283,14 @@ void draw(){
     if(enemyXPos < 416){
       enemyXPos = enemyXPos + 8;
     }
+    
   }
+  
+  if (trainerBattle){
+   image(EnemyTrainer.getText(), 0,height-textBox.height);
+   
+  }
+  
   if(startText){
     fill(255);
     rect(0,0,width,height);
@@ -366,7 +378,7 @@ void draw(){
     fill(255);
     text("ITEMS",22,288);
     image(redArrow,arrXPos,arrYPos);
-    println(mouseX + ", " + mouseY);
+    //println(mouseX + ", " + mouseY);
   }
   if(potionUsed){
     fill(255);
@@ -832,6 +844,13 @@ void keyPressed(){
        totodile.addMove(moves.getTackle());
        totodile.addMove(moves.getWaterGun());
        player.addPokemon(totodile); 
+       
+       Pokemon chikorita = dex.getChikorita();
+       chikorita.setLevel(5);
+       chikorita.addMove(moves.getTackle());
+       chikorita.addMove(moves.getCut());
+       trainer.getEnemy().addPokemon(chikorita);
+       
        startGame = false;
        traveling = true;
        
@@ -842,6 +861,13 @@ void keyPressed(){
        chikorita.addMove(moves.getTackle());
        chikorita.addMove(moves.getCut());
        player.addPokemon(chikorita);
+       
+       Pokemon cyndaquil = dex.getCyndaquil();
+       cyndaquil.setLevel(5);
+       cyndaquil.addMove(moves.getTackle());
+       cyndaquil.addMove(moves.getEmber());
+       trainer.getEnemy().addPokemon(cyndaquil);
+       
        startGame = false;
        traveling = true;
      }  
@@ -851,6 +877,13 @@ void keyPressed(){
        cyndaquil.addMove(moves.getTackle());
        cyndaquil.addMove(moves.getEmber());
        player.addPokemon(cyndaquil);
+       
+       Pokemon totodile = dex.getTotodile();
+       totodile.setLevel(5);
+       totodile.addMove(moves.getTackle());
+       totodile.addMove(moves.getWaterGun());
+       trainer.getEnemy().addPokemon(totodile);
+       
        startGame = false;
        traveling = true;
      }
@@ -938,7 +971,7 @@ void keyPressed(){
    } 
  }
  if(key == 'r'){
-   println("Hello");
+   //println("Hello");
    fill(0);
    for(int i = 0; i <width; i = i + 50 ){
      line(i,0,i,height);
@@ -971,6 +1004,28 @@ void walkingAnimation(){
         trainerYPos = 196;
         enemyXPos = -96;
       }
+      
+      if(current.checkTrainer(xpos+272,ypos+272)){
+        for (Trainer t: trainer.trainers){
+          if (xpos == t.getX() && t.battled == false) {
+            EnemyTrainer = t;
+            traveling = false;
+            trainerBattle = true;
+            loadBattle = true;
+            enemy = t.getPokemon().get(0);
+            enemyFront = enemy.getFront();
+            enemyFront = cleanUpImage2(enemyFront);
+            friendly = player.getPokemon().get(0);
+            friendlyBack = friendly.getBack();
+            friendlyBack = cleanUpImage2(friendlyBack);
+            trainerXPos = width;
+            trainerYPos = 196;
+            enemyXPos = -96;
+            t.setBattled();
+            trainerBattle = false;
+      }
+        }
+      }
     }
   }
   
@@ -998,6 +1053,26 @@ void walkingAnimation(){
         trainerXPos = width;
         trainerYPos = 196;
         enemyXPos = -96;
+      }
+      if(current.checkTrainer(xpos+272,ypos+272)){
+        for (Trainer t: trainer.trainers){
+          if (xpos == t.getX() && t.battled == false) {
+            EnemyTrainer = t;
+            traveling = false;
+            trainerBattle = true;
+            loadBattle = true;
+            enemy = t.getPokemon().get(0);
+            enemyFront = enemy.getFront();
+            enemyFront = cleanUpImage2(enemyFront);
+            friendly = player.getPokemon().get(0);
+            friendlyBack = friendly.getBack();
+            friendlyBack = cleanUpImage2(friendlyBack);
+            trainerXPos = width;
+            trainerYPos = 196;
+            enemyXPos = -96;
+            t.setBattled();
+      }
+        }
       }
     }
   }  
@@ -1027,6 +1102,26 @@ void walkingAnimation(){
         trainerYPos = 196;
         enemyXPos = -96;
      }
+    if(current.checkTrainer(xpos+272,ypos+272)){
+        for (Trainer t: trainer.trainers){
+          if (xpos == t.getX() && t.battled == false) {
+            EnemyTrainer = t;
+            traveling = false;
+            trainerBattle = true;
+            loadBattle = true;
+            enemy = t.getPokemon().get(0);
+            enemyFront = enemy.getFront();
+            enemyFront = cleanUpImage2(enemyFront);
+            friendly = player.getPokemon().get(0);
+            friendlyBack = friendly.getBack();
+            friendlyBack = cleanUpImage2(friendlyBack);
+            trainerXPos = width;
+            trainerYPos = 196;
+            enemyXPos = -96;
+            t.setBattled();
+      }
+        }
+      }
    }
   }
   
@@ -1055,6 +1150,26 @@ void walkingAnimation(){
         trainerYPos = 196;
         enemyXPos = -96;
      }
+     if(current.checkTrainer(xpos+272,ypos+272)){
+        for (Trainer t: trainer.trainers){
+          if (xpos == t.getX() && t.battled == false) {
+            EnemyTrainer = t;
+            traveling = false;
+            trainerBattle = true;
+            loadBattle = true;
+            enemy = t.getPokemon().get(0);
+            enemyFront = enemy.getFront();
+            enemyFront = cleanUpImage2(enemyFront);
+            friendly = player.getPokemon().get(0);
+            friendlyBack = friendly.getBack();
+            friendlyBack = cleanUpImage2(friendlyBack);
+            trainerXPos = width;
+            trainerYPos = 196;
+            enemyXPos = -96;
+            t.setBattled();
+      }
+        }
+      }
    }
   }
 }

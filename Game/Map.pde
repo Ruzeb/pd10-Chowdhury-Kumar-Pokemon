@@ -141,5 +141,12 @@ public class Map{
    return false; 
  }
  
+ public boolean checkTrainer(int x, int y){
+   if(mapColl.pixels[x + y * mapColl.width] == -65362){
+     return true;
+   }
+ return false;
+ }
+ 
  
 }
