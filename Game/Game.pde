@@ -218,7 +218,7 @@ void draw(){
 
   
   if(traveling){
-    
+    println(current.getMapCollisions().get(xpos + mouseX,ypos + mouseY));
     setNewMap();
     loadBorders();
     
@@ -433,6 +433,12 @@ void draw(){
     text(friendly.getMaxHealth()+"",492,356);
     text("/",453,356);
     text(friendly.getMoves(0).toString(),196,454);
+    if(friendly.getMovesSize() > 1){
+      text(friendly.getMoves(1).toString(),196,484); 
+    }
+    if(friendly.getMovesSize() > 2){
+      text(friendly.getMoves(2).toString(),196,514); 
+    }
     image(arrow,arrXPos,arrYPos);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
@@ -467,7 +473,7 @@ void draw(){
     text(friendlyAttack.toString(),36,494);
     fill(#12A2FF);
     rect(608,371,friendly.getExpBar(),8);
-    if(!friendlyAttack.animate(count,444,92)){
+    if(!friendlyAttack.animate(count,444,50)){
       count ++;
     }else{
       friendlyAttack.lowerHP(enemy);
@@ -676,7 +682,7 @@ void keyPressed(){
      }
      if(startMenu){
        if(arrYPos > 30){
-         arrYPos = arrYPos + 22;
+         arrYPos = arrYPos - 22;
        } 
      }
    }
@@ -722,7 +728,7 @@ void keyPressed(){
      }
      if(startMenu){
        if(arrYPos < 52){
-         arrYPos = arrYPos - 22;
+         arrYPos = arrYPos + 22;
        } 
      }
    }
@@ -771,8 +777,13 @@ void keyPressed(){
      traveling = true; 
    }
     
-   if(attackMenu && arrXPos == 156){
-     friendlyAttack = friendly.getMoves(0);
+   if(attackMenu && (arrYPos == 419 || arrYPos == 449)){
+     if(arrYPos == 419){
+       friendlyAttack = friendly.getMoves(0);
+     }
+     if(arrYPos == 449){
+       friendlyAttack = friendly.getMoves(1); 
+     }
      enemyAttack = enemy.getRandomMove();
      attackMenu = false;
      if(friendly.getSpeed() < enemy.getSpeed()){
@@ -1098,7 +1109,7 @@ void setNewMap(){
   
   //set shiftingright 
   if((gold == walkingright || gold == right) && xpos >= -288 && xpos < -256){
-    //println("Shifting right is true");
+      //println("Shifting right is true");
     shiftingRight = true;
   }
   if(xpos==-256){
